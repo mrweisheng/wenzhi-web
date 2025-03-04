@@ -88,7 +88,12 @@ const permissionDialogVisible = ref(false)
 const submitting = ref(false)
 
 const formRef = ref<FormInstance>()
-const roleForm = ref<RoleForm>({
+
+interface EditingRole extends RoleForm {
+  id?: number
+}
+
+const roleForm = ref<EditingRole>({
   role_name: '',
   description: '',
   menu_ids: []
@@ -151,10 +156,18 @@ const handleSubmit = async () => {
   try {
     submitting.value = true
     if (roleForm.value.id) {
-      await updateRole(roleForm.value.id, roleForm.value)
+      await updateRole(roleForm.value.id, {
+        role_name: roleForm.value.role_name,
+        description: roleForm.value.description,
+        menu_ids: roleForm.value.menu_ids
+      })
       ElMessage.success('更新成功')
     } else {
-      await createRole(roleForm.value)
+      await createRole({
+        role_name: roleForm.value.role_name,
+        description: roleForm.value.description,
+        menu_ids: roleForm.value.menu_ids
+      })
       ElMessage.success('创建成功')
     }
     dialogVisible.value = false

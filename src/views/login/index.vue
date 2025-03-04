@@ -51,7 +51,7 @@ import { User, Lock } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 import { login } from '@/api/auth'
-import type { LoginForm } from '@/types/auth'
+import type { LoginForm, LoginResponse } from '@/types/auth'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -75,8 +75,8 @@ const handleLogin = async () => {
   
   try {
     loading.value = true
-    const res = await login(loginForm.value)
-    const { token, refreshToken, expires, userInfo } = res.data
+    const { data } = await login(loginForm.value)
+    const { token, refreshToken, expires, userInfo } = data
     
     // 保存token和用户信息
     userStore.setToken(token, refreshToken, expires)

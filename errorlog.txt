@@ -1,0 +1,390 @@
+
+
+
+
+root@iZhyhoz8h642yaZ:~/home/wenzhi-web# npm run type-check
+
+> wenzhi-frontend@0.0.0 type-check
+> vue-tsc --noEmit
+
+src/router/index.ts:84:3 - error TS2322: Type 'AppRouteRecordRaw[]' is not assignable to type 'readonly RouteRecordRaw[]'.
+  Type 'AppRouteRecordRaw' is not assignable to type 'RouteRecordRaw'.
+    Type 'AppRouteRecordRaw' is not assignable to type 'RouteRecordRedirect'.
+      Types of property 'redirect' are incompatible.
+        Type 'RouteRecordRedirectOption | undefined' is not assignable to type 'RouteRecordRedirectOption'.
+          Type 'undefined' is not assignable to type 'RouteRecordRedirectOption'.
+
+84   routes: constantRoutes
+     ~~~~~~
+
+  node_modules/vue-router/dist/vue-router.d.ts:1538:5
+    1538     routes: Readonly<RouteRecordRaw[]>;
+             ~~~~~~
+    The expected type comes from property 'routes' which is declared here on type 'RouterOptions'
+
+src/types/index.ts:2:1 - error TS2308: Module './auth' has already exported a member named 'LoginForm'. Consider explicitly re-exporting to resolve the ambiguity.
+
+2 export * from './user'
+  ~~~~~~~~~~~~~~~~~~~~~~
+
+src/types/index.ts:3:1 - error TS2308: Module './user' has already exported a member named 'Role'. Consider explicitly re-exporting to resolve the ambiguity.
+
+3 export * from './role'
+  ~~~~~~~~~~~~~~~~~~~~~~
+
+src/types/index.ts:4:1 - error TS2308: Module './user' has already exported a member named 'Menu'. Consider explicitly re-exporting to resolve the ambiguity.
+
+4 export * from './menu'
+  ~~~~~~~~~~~~~~~~~~~~~~
+
+src/utils/request.ts:17:3 - error TS2345: Argument of type '(config: RequestConfig) => RequestConfig' is not assignable to parameter of type '(value: InternalAxiosRequestConfig<any>) => InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>'.
+  Type 'RequestConfig' is not assignable to type 'InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>'.
+    Type 'RequestConfig' is not assignable to type 'InternalAxiosRequestConfig<any>'.
+      Types of property 'headers' are incompatible.
+        Type 'AxiosHeaders | (Partial<RawAxiosHeaders & { Accept: AxiosHeaderValue; "Content-Length": AxiosHeaderValue; "User-Agent": AxiosHeaderValue; "Content-Encoding": AxiosHeaderValue; Authorization: AxiosHeaderValue; } & { ...; }> & Partial<...>) | undefined' is not assignable to type 'AxiosRequestHeaders'.
+          Type 'undefined' is not assignable to type 'AxiosRequestHeaders'.
+            Type 'undefined' is not assignable to type 'Partial<RawAxiosHeaders & { Accept: AxiosHeaderValue; "Content-Length": AxiosHeaderValue; "User-Agent": AxiosHeaderValue; "Content-Encoding": AxiosHeaderValue; Authorization: AxiosHeaderValue; } & { ...; }>'.
+
+17   (config: RequestConfig) => {
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/utils/request.ts:32:3 - error TS2345: Argument of type '(response: AxiosResponse<ApiResponse>) => Promise<AxiosResponse<any, any>> | ApiResponse<any>' is not assignable to parameter of type '(value: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+  Type 'Promise<AxiosResponse<any, any>> | ApiResponse<any>' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+    Type 'ApiResponse<any>' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+      Type 'ApiResponse<any>' is missing the following properties from type 'AxiosResponse<any, any>': status, statusText, headers, config
+
+32   (response: AxiosResponse<ApiResponse>) => {
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/views/login/index.vue:79:60 - error TS2339: Property 'data' does not exist on type 'LoginResponse'.
+
+79     const { token, refreshToken, expires, userInfo } = res.data
+                                                              ~~~~
+
+src/views/orders/index.vue:45:15 - error TS2322: Type '[string, string] | null' is not assignable to type 'EpPropMergeType<(new (...args: any[]) => string | number | string[] | Date | [DateModelType, DateModelType]) | (() => ModelValueType) | ((new (...args: any[]) => string | ... 3 more ... | [...]) | (() => ModelValueType))[], unknown, unknown> | undefined'.
+
+45               v-model="dateRange"
+                 ~~~~~~~
+
+  node_modules/element-plus/es/components/date-picker/src/date-picker.d.ts:200:14
+    200     readonly modelValue: import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | number | string[] | Date | [DateModelType, DateModelType]) | (() => import("element-plus/es/components/time-picker").ModelValueType) | ((new (...args: any[]) => string | number | string[] | Date | [DateModelType, DateModelType]) | (() => import("element-plus/es/components/time-picker").ModelValueType))[], unknown, unknown>;
+                     ~~~~~~~~~~
+    The expected type comes from property 'modelValue' which is declared here on type 'Partial<{ readonly disabled: boolean; readonly type: EpPropMergeType<(new (...args: any[]) => "year" | "month" | "date" | "years" | "months" | "dates" | "week" | "datetime" | "datetimerange" | "daterange" | "monthrange" | "yearrange") | (() => IDatePickerType) | ((new (...args: any[]) => "year" | ... 10 more ... | "...'
+
+src/views/orders/index.vue:77:19 - error TS2322: Type 'string' is not assignable to type 'EpPropMergeType<StringConstructor, "success" | "warning" | "info" | "primary" | "danger", unknown> | undefined'.
+
+77           <el-tag :type="getStatusType(row.status)">
+                     ~~~~~
+
+  node_modules/element-plus/es/components/tag/src/tag.vue.d.ts:41:14
+    41     readonly type: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "success" | "warning" | "info" | "primary" | "danger", unknown>;
+                    ~~~~
+    The expected type comes from property 'type' which is declared here on type 'Partial<{ readonly round: boolean; readonly type: EpPropMergeType<StringConstructor, "success" | "warning" | "info" | "primary" | "danger", unknown>; readonly effect: EpPropMergeType<...>; readonly closable: boolean; readonly disableTransitions: boolean; readonly hit: boolean; }> & Omit<...> & Record<...>'
+
+src/views/orders/index.vue:168:15 - error TS2322: Type '(file: UploadFile) => void' is not assignable to type '(uploadFile: UploadFile, uploadFiles: UploadFiles) => void'.
+
+168               :on-change="handleOrderFileChange"
+                  ~~~~~~~~~~
+
+  node_modules/element-plus/es/components/upload/src/upload.vue.d.ts:262:14
+    262     readonly onChange: (uploadFile: import("./upload").UploadFile, uploadFiles: import("./upload").UploadFiles) => void;
+                     ~~~~~~~~
+    The expected type comes from property 'onChange' which is declared here on type 'Partial<{ readonly data: EpPropMergeType<(new (...args: any[]) => Mutable<Record<string, any>> | Promise<Mutable<Record<string, any>>> | ((rawFile: UploadRawFile) => Awaitable<...>)) | (() => Awaitable<...> | ((rawFile: UploadRawFile) => Awaitable<...>)) | ((new (...args: any[]) => Mutable<...> | ... 1 more ... | ((...'
+
+src/views/orders/index.vue:190:17 - error TS2322: Type '(file: UploadFile) => void' is not assignable to type '(uploadFile: UploadFile, uploadFiles: UploadFiles) => void'.
+
+190                 :on-change="handleOrderFileChange"
+                    ~~~~~~~~~~
+
+  node_modules/element-plus/es/components/upload/src/upload.vue.d.ts:262:14
+    262     readonly onChange: (uploadFile: import("./upload").UploadFile, uploadFiles: import("./upload").UploadFiles) => void;
+                     ~~~~~~~~
+    The expected type comes from property 'onChange' which is declared here on type 'Partial<{ readonly data: EpPropMergeType<(new (...args: any[]) => Mutable<Record<string, any>> | Promise<Mutable<Record<string, any>>> | ((rawFile: UploadRawFile) => Awaitable<...>)) | (() => Awaitable<...> | ((rawFile: UploadRawFile) => Awaitable<...>)) | ((new (...args: any[]) => Mutable<...> | ... 1 more ... | ((...'
+
+src/views/orders/index.vue:207:17 - error TS2322: Type '(file: UploadFile) => void' is not assignable to type '(uploadFile: UploadFile, uploadFiles: UploadFiles) => void'.
+
+207                 :on-change="handleRefundFileChange"
+                    ~~~~~~~~~~
+
+  node_modules/element-plus/es/components/upload/src/upload.vue.d.ts:262:14
+    262     readonly onChange: (uploadFile: import("./upload").UploadFile, uploadFiles: import("./upload").UploadFiles) => void;
+                     ~~~~~~~~
+    The expected type comes from property 'onChange' which is declared here on type 'Partial<{ readonly data: EpPropMergeType<(new (...args: any[]) => Mutable<Record<string, any>> | Promise<Mutable<Record<string, any>>> | ((rawFile: UploadRawFile) => Awaitable<...>)) | (() => Awaitable<...> | ((rawFile: UploadRawFile) => Awaitable<...>)) | ((new (...args: any[]) => Mutable<...> | ... 1 more ... | ((...'
+
+src/views/orders/index.vue:323:26 - error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+
+323       amount: parseFloat(order.amount),
+                             ~~~~~~~~~~~~
+
+src/views/orders/index.vue:324:33 - error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+
+324       refund_amount: parseFloat(order.refund_amount),
+                                    ~~~~~~~~~~~~~~~~~~~
+
+src/views/orders/index.vue:325:23 - error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+
+325       fee: parseFloat(order.fee),
+                          ~~~~~~~~~
+
+src/views/orders/index.vue:326:36 - error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+
+326       merchant_payment: parseFloat(order.merchant_payment)
+                                       ~~~~~~~~~~~~~~~~~~~~~~
+
+src/views/orders/index.vue:447:13 - error TS2339: Property 'code' does not exist on type 'AxiosResponse<any, any>'.
+
+447     const { code, message, data } = await processOrder(
+                ~~~~
+
+src/views/orders/index.vue:447:19 - error TS2339: Property 'message' does not exist on type 'AxiosResponse<any, any>'.
+
+447     const { code, message, data } = await processOrder(
+                      ~~~~~~~
+
+src/views/orders/index.vue:449:7 - error TS2554: Expected 1 arguments, but got 3.
+
+449       orderFile.value,
+          ~~~~~~~~~~~~~~~~
+450       refundFile.value || undefined
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/views/roles/index.vue:153:24 - error TS2339: Property 'id' does not exist on type '{ role_name: string; description?: string | undefined; menu_ids?: number[] | undefined; }'.
+
+153     if (roleForm.value.id) {
+                           ~~
+
+src/views/roles/index.vue:154:39 - error TS2339: Property 'id' does not exist on type '{ role_name: string; description?: string | undefined; menu_ids?: number[] | undefined; }'.
+
+154       await updateRole(roleForm.value.id, roleForm.value)
+                                          ~~
+
+src/views/system/roles/index.vue:15:5 - error TS2304: Cannot find name 'menuOptions'.
+
+15     menuOptions.value = data
+       ~~~~~~~~~~~
+
+src/views/system/roles/index.vue:22:3 - error TS2304: Cannot find name 'fetchRoles'.
+
+22   fetchRoles()
+     ~~~~~~~~~~
+
+src/views/users/index.vue:41:15 - error TS2322: Type '0 | 1 | undefined' is not assignable to type 'string | number | boolean | Record<string, any>'.
+
+41               :value="item.value"
+                 ~~~~~~
+
+  node_modules/element-plus/es/components/select/src/option.vue.d.ts:58:5
+    58     value: {
+           ~~~~~
+    The expected type comes from property 'value' which is declared here on type 'Partial<{ disabled: boolean; created: boolean; }> & Omit<{ readonly disabled: boolean; readonly value: string | number | boolean | Record<string, any>; readonly created: boolean; readonly label?: string | ... 1 more ... | undefined; } & VNodeProps & AllowedComponentProps & ComponentCustomProps, "disabled" | "created...'
+
+src/views/users/index.vue:222:5 - error TS2304: Cannot find name 'total'.
+
+222     total.value = res.data.total
+        ~~~~~
+
+
+Found 25 errors in 8 files.
+
+Errors  Files
+     1  src/router/index.ts:84
+     3  src/types/index.ts:2
+     2  src/utils/request.ts:17
+     1  src/views/login/index.vue:79
+    12  src/views/orders/index.vue:45
+     2  src/views/roles/index.vue:153
+     2  src/views/system/roles/index.vue:15
+     2  src/views/users/index.vue:41
+root@iZhyhoz8h642yaZ:~/home/wenzhi-web# npm run type-check
+
+> wenzhi-frontend@0.0.0 type-check
+> vue-tsc --noEmit
+
+src/router/index.ts:84:3 - error TS2322: Type 'AppRouteRecordRaw[]' is not assignable to type 'readonly RouteRecordRaw[]'.
+  Type 'AppRouteRecordRaw' is not assignable to type 'RouteRecordRaw'.
+    Type 'AppRouteRecordRaw' is not assignable to type 'RouteRecordRedirect'.
+      Types of property 'redirect' are incompatible.
+        Type 'RouteRecordRedirectOption | undefined' is not assignable to type 'RouteRecordRedirectOption'.
+          Type 'undefined' is not assignable to type 'RouteRecordRedirectOption'.
+
+84   routes: constantRoutes
+     ~~~~~~
+
+  node_modules/vue-router/dist/vue-router.d.ts:1538:5
+    1538     routes: Readonly<RouteRecordRaw[]>;
+             ~~~~~~
+    The expected type comes from property 'routes' which is declared here on type 'RouterOptions'
+
+src/types/index.ts:2:1 - error TS2308: Module './auth' has already exported a member named 'LoginForm'. Consider explicitly re-exporting to resolve the ambiguity.
+
+2 export * from './user'
+  ~~~~~~~~~~~~~~~~~~~~~~
+
+src/types/index.ts:3:1 - error TS2308: Module './user' has already exported a member named 'Role'. Consider explicitly re-exporting to resolve the ambiguity.
+
+3 export * from './role'
+  ~~~~~~~~~~~~~~~~~~~~~~
+
+src/types/index.ts:4:1 - error TS2308: Module './user' has already exported a member named 'Menu'. Consider explicitly re-exporting to resolve the ambiguity.
+
+4 export * from './menu'
+  ~~~~~~~~~~~~~~~~~~~~~~
+
+src/utils/request.ts:17:3 - error TS2345: Argument of type '(config: RequestConfig) => RequestConfig' is not assignable to parameter of type '(value: InternalAxiosRequestConfig<any>) => InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>'.
+  Type 'RequestConfig' is not assignable to type 'InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>'.
+    Type 'RequestConfig' is not assignable to type 'InternalAxiosRequestConfig<any>'.
+      Types of property 'headers' are incompatible.
+        Type 'AxiosHeaders | (Partial<RawAxiosHeaders & { Accept: AxiosHeaderValue; "Content-Length": AxiosHeaderValue; "User-Agent": AxiosHeaderValue; "Content-Encoding": AxiosHeaderValue; Authorization: AxiosHeaderValue; } & { ...; }> & Partial<...>) | undefined' is not assignable to type 'AxiosRequestHeaders'.
+          Type 'undefined' is not assignable to type 'AxiosRequestHeaders'.
+            Type 'undefined' is not assignable to type 'Partial<RawAxiosHeaders & { Accept: AxiosHeaderValue; "Content-Length": AxiosHeaderValue; "User-Agent": AxiosHeaderValue; "Content-Encoding": AxiosHeaderValue; Authorization: AxiosHeaderValue; } & { ...; }>'.
+
+17   (config: RequestConfig) => {
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/utils/request.ts:32:3 - error TS2345: Argument of type '(response: AxiosResponse<ApiResponse>) => Promise<AxiosResponse<any, any>> | ApiResponse<any>' is not assignable to parameter of type '(value: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+  Type 'Promise<AxiosResponse<any, any>> | ApiResponse<any>' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+    Type 'ApiResponse<any>' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
+      Type 'ApiResponse<any>' is missing the following properties from type 'AxiosResponse<any, any>': status, statusText, headers, config
+
+32   (response: AxiosResponse<ApiResponse>) => {
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/views/login/index.vue:79:60 - error TS2339: Property 'data' does not exist on type 'LoginResponse'.
+
+79     const { token, refreshToken, expires, userInfo } = res.data
+                                                              ~~~~
+
+src/views/orders/index.vue:45:15 - error TS2322: Type '[string, string] | null' is not assignable to type 'EpPropMergeType<(new (...args: any[]) => string | number | string[] | Date | [DateModelType, DateModelType]) | (() => ModelValueType) | ((new (...args: any[]) => string | ... 3 more ... | [...]) | (() => ModelValueType))[], unknown, unknown> | undefined'.
+
+45               v-model="dateRange"
+                 ~~~~~~~
+
+  node_modules/element-plus/es/components/date-picker/src/date-picker.d.ts:200:14
+    200     readonly modelValue: import("element-plus/es/utils").EpPropMergeType<(new (...args: any[]) => string | number | string[] | Date | [DateModelType, DateModelType]) | (() => import("element-plus/es/components/time-picker").ModelValueType) | ((new (...args: any[]) => string | number | string[] | Date | [DateModelType, DateModelType]) | (() => import("element-plus/es/components/time-picker").ModelValueType))[], unknown, unknown>;
+                     ~~~~~~~~~~
+    The expected type comes from property 'modelValue' which is declared here on type 'Partial<{ readonly disabled: boolean; readonly type: EpPropMergeType<(new (...args: any[]) => "year" | "month" | "date" | "years" | "months" | "dates" | "week" | "datetime" | "datetimerange" | "daterange" | "monthrange" | "yearrange") | (() => IDatePickerType) | ((new (...args: any[]) => "year" | ... 10 more ... | "...'
+
+src/views/orders/index.vue:77:19 - error TS2322: Type 'string' is not assignable to type 'EpPropMergeType<StringConstructor, "success" | "warning" | "info" | "primary" | "danger", unknown> | undefined'.
+
+77           <el-tag :type="getStatusType(row.status)">
+                     ~~~~~
+
+  node_modules/element-plus/es/components/tag/src/tag.vue.d.ts:41:14
+    41     readonly type: import("element-plus/es/utils").EpPropMergeType<StringConstructor, "success" | "warning" | "info" | "primary" | "danger", unknown>;
+                    ~~~~
+    The expected type comes from property 'type' which is declared here on type 'Partial<{ readonly round: boolean; readonly type: EpPropMergeType<StringConstructor, "success" | "warning" | "info" | "primary" | "danger", unknown>; readonly effect: EpPropMergeType<...>; readonly closable: boolean; readonly disableTransitions: boolean; readonly hit: boolean; }> & Omit<...> & Record<...>'
+
+src/views/orders/index.vue:168:15 - error TS2322: Type '(file: UploadFile) => void' is not assignable to type '(uploadFile: UploadFile, uploadFiles: UploadFiles) => void'.
+
+168               :on-change="handleOrderFileChange"
+                  ~~~~~~~~~~
+
+  node_modules/element-plus/es/components/upload/src/upload.vue.d.ts:262:14
+    262     readonly onChange: (uploadFile: import("./upload").UploadFile, uploadFiles: import("./upload").UploadFiles) => void;
+                     ~~~~~~~~
+    The expected type comes from property 'onChange' which is declared here on type 'Partial<{ readonly data: EpPropMergeType<(new (...args: any[]) => Mutable<Record<string, any>> | Promise<Mutable<Record<string, any>>> | ((rawFile: UploadRawFile) => Awaitable<...>)) | (() => Awaitable<...> | ((rawFile: UploadRawFile) => Awaitable<...>)) | ((new (...args: any[]) => Mutable<...> | ... 1 more ... | ((...'
+
+src/views/orders/index.vue:190:17 - error TS2322: Type '(file: UploadFile) => void' is not assignable to type '(uploadFile: UploadFile, uploadFiles: UploadFiles) => void'.
+
+190                 :on-change="handleOrderFileChange"
+                    ~~~~~~~~~~
+
+  node_modules/element-plus/es/components/upload/src/upload.vue.d.ts:262:14
+    262     readonly onChange: (uploadFile: import("./upload").UploadFile, uploadFiles: import("./upload").UploadFiles) => void;
+                     ~~~~~~~~
+    The expected type comes from property 'onChange' which is declared here on type 'Partial<{ readonly data: EpPropMergeType<(new (...args: any[]) => Mutable<Record<string, any>> | Promise<Mutable<Record<string, any>>> | ((rawFile: UploadRawFile) => Awaitable<...>)) | (() => Awaitable<...> | ((rawFile: UploadRawFile) => Awaitable<...>)) | ((new (...args: any[]) => Mutable<...> | ... 1 more ... | ((...'
+
+src/views/orders/index.vue:207:17 - error TS2322: Type '(file: UploadFile) => void' is not assignable to type '(uploadFile: UploadFile, uploadFiles: UploadFiles) => void'.
+
+207                 :on-change="handleRefundFileChange"
+                    ~~~~~~~~~~
+
+  node_modules/element-plus/es/components/upload/src/upload.vue.d.ts:262:14
+    262     readonly onChange: (uploadFile: import("./upload").UploadFile, uploadFiles: import("./upload").UploadFiles) => void;
+                     ~~~~~~~~
+    The expected type comes from property 'onChange' which is declared here on type 'Partial<{ readonly data: EpPropMergeType<(new (...args: any[]) => Mutable<Record<string, any>> | Promise<Mutable<Record<string, any>>> | ((rawFile: UploadRawFile) => Awaitable<...>)) | (() => Awaitable<...> | ((rawFile: UploadRawFile) => Awaitable<...>)) | ((new (...args: any[]) => Mutable<...> | ... 1 more ... | ((...'
+
+src/views/orders/index.vue:323:26 - error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+
+323       amount: parseFloat(order.amount),
+                             ~~~~~~~~~~~~
+
+src/views/orders/index.vue:324:33 - error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+
+324       refund_amount: parseFloat(order.refund_amount),
+                                    ~~~~~~~~~~~~~~~~~~~
+
+src/views/orders/index.vue:325:23 - error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+
+325       fee: parseFloat(order.fee),
+                          ~~~~~~~~~
+
+src/views/orders/index.vue:326:36 - error TS2345: Argument of type 'number' is not assignable to parameter of type 'string'.
+
+326       merchant_payment: parseFloat(order.merchant_payment)
+                                       ~~~~~~~~~~~~~~~~~~~~~~
+
+src/views/orders/index.vue:447:13 - error TS2339: Property 'code' does not exist on type 'AxiosResponse<any, any>'.
+
+447     const { code, message, data } = await processOrder(
+                ~~~~
+
+src/views/orders/index.vue:447:19 - error TS2339: Property 'message' does not exist on type 'AxiosResponse<any, any>'.
+
+447     const { code, message, data } = await processOrder(
+                      ~~~~~~~
+
+src/views/orders/index.vue:449:7 - error TS2554: Expected 1 arguments, but got 3.
+
+449       orderFile.value,
+          ~~~~~~~~~~~~~~~~
+450       refundFile.value || undefined
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/views/roles/index.vue:153:24 - error TS2339: Property 'id' does not exist on type '{ role_name: string; description?: string | undefined; menu_ids?: number[] | undefined; }'.
+
+153     if (roleForm.value.id) {
+                           ~~
+
+src/views/roles/index.vue:154:39 - error TS2339: Property 'id' does not exist on type '{ role_name: string; description?: string | undefined; menu_ids?: number[] | undefined; }'.
+
+154       await updateRole(roleForm.value.id, roleForm.value)
+                                          ~~
+
+src/views/system/roles/index.vue:15:5 - error TS2304: Cannot find name 'menuOptions'.
+
+15     menuOptions.value = data
+       ~~~~~~~~~~~
+
+src/views/system/roles/index.vue:22:3 - error TS2304: Cannot find name 'fetchRoles'.
+
+22   fetchRoles()
+     ~~~~~~~~~~
+
+src/views/users/index.vue:41:15 - error TS2322: Type '0 | 1 | undefined' is not assignable to type 'string | number | boolean | Record<string, any>'.
+
+41               :value="item.value"
+                 ~~~~~~
+
+  node_modules/element-plus/es/components/select/src/option.vue.d.ts:58:5
+    58     value: {
+           ~~~~~
+    The expected type comes from property 'value' which is declared here on type 'Partial<{ disabled: boolean; created: boolean; }> & Omit<{ readonly disabled: boolean; readonly value: string | number | boolean | Record<string, any>; readonly created: boolean; readonly label?: string | ... 1 more ... | undefined; } & VNodeProps & AllowedComponentProps & ComponentCustomProps, "disabled" | "created...'
+
+src/views/users/index.vue:222:5 - error TS2304: Cannot find name 'total'.
+
+222     total.value = res.data.total
+        ~~~~~
+
+
+Found 25 errors in 8 files.
+
+Errors  Files
+     1  src/router/index.ts:84
+     3  src/types/index.ts:2
+     2  src/utils/request.ts:17
+     1  src/views/login/index.vue:79
+    12  src/views/orders/index.vue:45
+     2  src/views/roles/index.vue:153
+     2  src/views/system/roles/index.vue:15
+     2  src/views/users/index.vue:41

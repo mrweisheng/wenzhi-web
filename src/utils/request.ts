@@ -36,12 +36,12 @@ service.interceptors.response.use(
       ElMessage.error(res.message || '请求失败')
       return Promise.reject(new Error(res.message || '请求失败'))
     }
-    return res
+    return Promise.resolve(res)
   },
   (error) => {
     console.error('Response error:', error)
-    const config = error.config as RequestConfig
-    if (config.showError !== false) {
+    const config = error.config
+    if (config?.showError !== false) {
       ElMessage.error(error.response?.data?.message || '请求失败')
     }
     return Promise.reject(error)

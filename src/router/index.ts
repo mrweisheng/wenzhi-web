@@ -5,7 +5,7 @@ import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 
 // 基础路由
-export const constantRoutes: AppRouteRecordRaw[] = [
+const constantRoutes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
@@ -81,7 +81,7 @@ export const constantRoutes: AppRouteRecordRaw[] = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: constantRoutes
+  routes: constantRoutes as RouteRecordRaw[]
 })
 
 // 路由守卫

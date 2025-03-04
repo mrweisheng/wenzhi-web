@@ -1,8 +1,9 @@
 import request from '@/utils/request'
-import type { LoginForm, LoginResponse } from '@/types/auth'
+import type { LoginForm } from '@/types/auth'
+import type { ApiResponse } from '@/types/response'
 
-export function login(data: LoginForm): Promise<LoginResponse> {
-  return request({
+export function login(data: LoginForm) {
+  return request<ApiResponse>({
     url: '/api/auth/login',
     method: 'post',
     data
@@ -10,7 +11,7 @@ export function login(data: LoginForm): Promise<LoginResponse> {
 }
 
 export function getUserInfo() {
-  return request({
+  return request<ApiResponse>({
     url: '/api/auth/userInfo',
     method: 'get'
   })

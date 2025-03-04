@@ -239,9 +239,11 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { getOrders, processOrder } from '@/api/order'
 import type { Order, OrderQuery } from '@/types/order'
+import type { ApiResponse } from '@/types/response'
 import { formatDate } from '@/utils/format'
 import { ElMessage } from 'element-plus'
 import type { FormInstance } from 'element-plus'
+import type { UploadFile, UploadFiles } from 'element-plus'
 
 // 数据加载状态
 const loading = ref(false)
@@ -272,15 +274,15 @@ const channelOptions = [
 ]
 
 // 获取状态标签类型
-const getStatusType = (status: string) => {
-  const map: Record<string, string> = {
-    pending: 'warning',
+const getStatusType = (status: string): 'success' | 'warning' | 'info' | 'primary' | 'danger' => {
+  const typeMap: Record<string, 'success' | 'warning' | 'info' | 'primary' | 'danger'> = {
     paid: 'success',
-    completed: 'success',
+    pending: 'warning',
+    cancelled: 'danger',
     refunded: 'info',
-    cancelled: 'danger'
+    completed: 'success'
   }
-  return map[status] || 'info'
+  return typeMap[status] || 'info'
 }
 
 // 获取状态标签文本
@@ -320,10 +322,10 @@ const getList = async () => {
     const res = await getOrders(params)
     orderList.value = res.data.list.map((order: Order) => ({
       ...order,
-      amount: parseFloat(order.amount),
-      refund_amount: parseFloat(order.refund_amount),
-      fee: parseFloat(order.fee),
-      merchant_payment: parseFloat(order.merchant_payment)
+      amount: order.amount,
+      refund_amount: order.refund_amount,
+      fee: order.fee,
+      merchant_payment: order.merchant_payment
     }))
     total.value = res.data.total
   } catch (error) {
@@ -385,17 +387,12 @@ const handleUpdateOrders = () => {
 }
 
 // 文件上传相关
-interface UploadFile {
-  raw: File
-  name: string
+const handleOrderFileChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+  orderFile.value = uploadFile.raw
 }
 
-const handleOrderFileChange = (file: UploadFile) => {
-  orderFile.value = file.raw
-}
-
-const handleRefundFileChange = (file: UploadFile) => {
-  refundFile.value = file.raw
+const handleRefundFileChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
+  refundFile.value = uploadFile.raw
 }
 
 // 判断是否可以提交
@@ -432,7 +429,6 @@ const handleSubmitUpdate = async () => {
   try {
     updating.value = true
     
-    // 校验文件数量
     if (!orderFile.value) {
       ElMessage.error('请选择订单文件')
       return
@@ -443,25 +439,20 @@ const handleSubmitUpdate = async () => {
       return
     }
     
-    // 调用处理订单API
-    const { code, message, data } = await processOrder(
-      selectedChannel.value,
-      orderFile.value,
-      refundFile.value || undefined
-    )
-    
-    // 根据返回的状态码处理结果
-    if (code === 0) {
-      ElMessage.success(message)
-      updateDialogVisible.value = false
-      // 刷新订单列表
-      getList()
-    } else {
-      ElMessage.error(message)
+    const formData = new FormData()
+    formData.append('channel', selectedChannel.value)
+    formData.append('order_file', orderFile.value)
+    if (refundFile.value) {
+      formData.append('refund_file', refundFile.value)
     }
+
+    const { data } = await processOrder(formData)
+    ElMessage.success('处理成功')
+    updateDialogVisible.value = false
+    getList()
   } catch (error: any) {
-    console.error('更新订单失败:', error)
-    const errorMsg = error.response?.data?.message || '更新失败，请稍后重试'
+    console.error('处理订单失败:', error)
+    const errorMsg = error.response?.data?.message || '处理失败，请稍后重试'
     ElMessage.error(errorMsg)
   } finally {
     updating.value = false

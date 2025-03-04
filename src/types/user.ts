@@ -32,19 +32,15 @@ export interface UserInfo {
   id: number
   username: string
   role_id: number
-  real_name: string | null
-  email: string | null
-  status: number
-  role?: Role
-  menus?: Menu[]
+  status: 0 | 1
   created_at: string
   updated_at: string
 }
 
 export interface UserQuery {
-  username?: string
-  role_id?: number
-  status?: number
   page: number
   pageSize: number
+  username?: string
+  role_id?: number
+  status?: 0 | 1
 }

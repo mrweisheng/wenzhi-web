@@ -199,12 +199,19 @@ const rules: FormRules = {
   ]
 }
 
+interface StatusOption {
+  label: string
+  value: 0 | 1
+}
+
 // 状态选项
-const statusOptions = [
-  { label: '全部', value: undefined },
+const statusOptions = ref<StatusOption[]>([
   { label: '启用', value: 1 },
   { label: '禁用', value: 0 }
-] as const
+])
+
+// 分页相关
+const total = ref(0)
 
 // 搜索表单
 const searchForm = ref({
@@ -217,9 +224,9 @@ const searchForm = ref({
 const getUserList = async () => {
   try {
     loading.value = true
-    const res = await getUsers(queryParams.value)
-    userList.value = res.data.list
-    total.value = res.data.total
+    const { data } = await getUsers(queryParams.value)
+    userList.value = data.list
+    total.value = data.total
   } catch (error) {
     console.error('获取用户列表失败:', error)
   } finally {
@@ -290,11 +297,11 @@ const handleDelete = async (row: UserInfo) => {
 // 修改用户状态
 const handleStatusChange = async (row: UserInfo) => {
   try {
-    await updateUserStatus(row.id, row.status)
-    ElMessage.success('状态修改成功')
+    await updateUserStatus(row.id, { status: row.status })
+    ElMessage.success('状态更新成功')
   } catch (error) {
-    console.error('Update user status error:', error)
-    // 恢复状态
+    console.error('更新状态失败:', error)
+    // 回滚状态
     row.status = row.status === 1 ? 0 : 1
   }
 }
