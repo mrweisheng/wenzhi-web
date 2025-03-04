@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import type { Role, RoleForm } from '@/types/role'
+import type { RoleForm } from '@/types/role'
 
 // 获取角色列表
 export function getRoles() {

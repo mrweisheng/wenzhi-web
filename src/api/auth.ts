@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import type { LoginForm } from '@/types/auth'
+import type { LoginForm, LoginResponse } from '@/types/auth'
 
 export function login(data: LoginForm) {
   return request({

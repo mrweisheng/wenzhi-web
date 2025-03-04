@@ -45,10 +45,15 @@ import {
   User,
   SwitchButton
 } from '@element-plus/icons-vue'
+import type { PropType } from 'vue'
+import type { UserInfo } from '@/types/user'
 
-defineProps<{
-  collapsed: boolean
-}>()
+defineProps({
+  collapsed: {
+    type: Boolean,
+    required: true
+  }
+})
 
 const emit = defineEmits<{
   (e: 'update:collapsed', value: boolean): void

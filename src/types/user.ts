@@ -10,6 +10,7 @@ export interface Menu {
   icon: string
   sort: number
   parent_id: number | null
+  children?: Menu[]
 }
 
 export interface Role {

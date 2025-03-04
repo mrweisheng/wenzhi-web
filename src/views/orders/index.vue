@@ -241,6 +241,7 @@ import { getOrders, processOrder } from '@/api/order'
 import type { Order, OrderQuery } from '@/types/order'
 import { formatDate } from '@/utils/format'
 import { ElMessage } from 'element-plus'
+import type { FormInstance } from 'element-plus'
 
 // 数据加载状态
 const loading = ref(false)

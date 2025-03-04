@@ -1,10 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import type { AppRouteRecordRaw } from '@/types/route'
 import type { RouteRecordRaw } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
 
 // 基础路由
-export const constantRoutes: RouteRecordRaw[] = [
+export const constantRoutes: AppRouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
