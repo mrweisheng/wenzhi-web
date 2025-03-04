@@ -78,6 +78,15 @@
           </div>
         </el-form-item>
 
+        <el-form-item label="申请日期" prop="apply_date">
+          <el-date-picker
+            v-model="applyDate"
+            type="date"
+            value-format="YYYY-MM-DD"
+            placeholder="选择日期"
+          />
+        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" class="submit-btn" @click="handleSubmit" :loading="submitting">
             提交申请
@@ -107,7 +116,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { CircleCheckFilled } from '@element-plus/icons-vue'
@@ -115,6 +124,8 @@ import { createWriter } from '@/api/writer'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { WriterForm } from '@/types/writer'
 import { getClientIp } from '@/utils/ip'
+import type { DateModelType } from 'element-plus'
+import { formatDate } from '@/utils/date'
 
 const route = useRoute()
 const router = useRouter()
@@ -124,6 +135,7 @@ const successDialogVisible = ref(false)
 const submittedWriterId = ref('')
 const formVisible = ref(false)
 const selectedSpecialized = ref<string[]>([])
+const applyDate = ref<DateModelType | undefined>()
 
 // 验证 token
 onMounted(() => {
@@ -151,7 +163,8 @@ const applicationForm = ref<WriterForm>({
   alipay_name: '',
   alipay_account: '',
   id_number: '',
-  ip_address: ''
+  ip_address: '',
+  apply_date: ''
 })
 
 // 表单校验规则
@@ -178,6 +191,9 @@ const rules: FormRules = {
   ],
   specialized_content: [
     { required: true, message: '请选择擅长内容', trigger: 'change' }
+  ],
+  apply_date: [
+    { required: true, message: '请选择申请日期', trigger: 'change' }
   ]
 }
 
@@ -220,6 +236,11 @@ const toggleSpecialized = (value: string) => {
   // 更新表单的 specialized_content 字段
   applicationForm.value.specialized_content = selectedSpecialized.value.join(';')
 }
+
+// 监听日期变化
+watch(applyDate, (val) => {
+  applicationForm.value.apply_date = formatDate(val)
+})
 
 // 提交表单
 const handleSubmit = async () => {

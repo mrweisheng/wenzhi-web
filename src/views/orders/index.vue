@@ -44,10 +44,10 @@
             <el-date-picker
               v-model="dateRange"
               type="daterange"
+              value-format="YYYY-MM-DD"
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
-              value-format="YYYY-MM-DD"
             />
           </el-form-item>
           <el-form-item>
@@ -244,6 +244,7 @@ import { formatDate } from '@/utils/format'
 import { ElMessage } from 'element-plus'
 import type { FormInstance } from 'element-plus'
 import type { UploadFile, UploadFiles, UploadRawFile } from 'element-plus'
+import type { DateModelType } from 'element-plus'
 
 // 数据加载状态
 const loading = ref(false)
@@ -262,7 +263,7 @@ const queryParams = ref<OrderQuery>({
 })
 
 // 日期范围
-const dateRange = ref<[string, string] | null>(null)
+const dateRange = ref<[DateModelType, DateModelType] | undefined>()
 
 // 获取列表数据
 const getList = async () => {
@@ -281,9 +282,9 @@ const getList = async () => {
 
 // 监听日期范围变化
 watch(dateRange, (val) => {
-  if (val) {
-    queryParams.value.startTime = val[0]
-    queryParams.value.endTime = val[1]
+  if (val && val[0] && val[1]) {
+    queryParams.value.startTime = String(val[0])
+    queryParams.value.endTime = String(val[1])
   } else {
     queryParams.value.startTime = ''
     queryParams.value.endTime = ''
@@ -343,7 +344,6 @@ const handleSearch = () => {
 
 // 重置查询
 const resetQuery = () => {
-  // 重置查询参数
   queryParams.value = {
     page: 1,
     pageSize: 10,
@@ -353,9 +353,7 @@ const resetQuery = () => {
     startTime: '',
     endTime: ''
   }
-  // 重置日期范围
-  dateRange.value = null
-  // 重新查询
+  dateRange.value = undefined
   getList()
 }
 

@@ -147,11 +147,21 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!-- 日期范围选择器 -->
+    <el-date-picker
+      v-model="dateRange"
+      type="daterange"
+      value-format="YYYY-MM-DD"
+      range-separator="至"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { getUsers, createUser, updateUser, deleteUser, updateUserStatus } from '@/api/user'
@@ -160,6 +170,8 @@ import type { UserInfo, UserForm, UserQuery } from '@/types/user'
 import type { Role } from '@/types/role'
 import { formatDate } from '@/utils/format'
 import type { ApiPageResponse } from '@/types/response'
+import type { DateModelType } from 'element-plus'
+import { formatDateRange } from '@/utils/date'
 
 const loading = ref(false)
 const userList = ref<UserInfo[]>([])
@@ -215,6 +227,9 @@ const searchForm = ref({
   role_id: '',
   status: ''
 })
+
+// 日期范围
+const dateRange = ref<[DateModelType, DateModelType] | undefined>()
 
 // 获取用户列表
 const getUserList = async () => {
@@ -351,6 +366,13 @@ const resetForm = () => {
 const formatStatus = (status: number) => {
   return statusOptions.find((item) => item.value === status)?.label || '未知'
 }
+
+// 监听日期变化
+watch(dateRange, (val) => {
+  const { startTime, endTime } = formatDateRange(val)
+  queryParams.value.startTime = startTime
+  queryParams.value.endTime = endTime
+})
 
 onMounted(async () => {
   await getUserList()

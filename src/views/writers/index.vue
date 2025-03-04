@@ -305,11 +305,21 @@
         <el-button type="primary" @click="handleSaveQR">保存二维码</el-button>
       </template>
     </el-dialog>
+
+    <!-- 日期范围选择器 -->
+    <el-date-picker
+      v-model="dateRange"
+      type="daterange"
+      value-format="YYYY-MM-DD"
+      range-separator="至"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { 
@@ -325,6 +335,8 @@ import type { Writer, WriterForm, WriterQuery } from '@/types/writer'
 import { formatDate } from '@/utils/format'
 import { getClientIp } from '@/utils/ip'
 import QRCode from 'qrcodejs2-fix'
+import type { DateModelType } from 'element-plus'
+import { formatDateRange } from '@/utils/date'
 
 // 数据加载状态
 const loading = ref(false)
@@ -423,6 +435,16 @@ const selectedSpecialized = ref<string[]>([])
 const qrDialogVisible = ref(false)
 const qrCodeRef = ref<HTMLElement>()
 let qrcode: InstanceType<typeof QRCode> | null = null
+
+// 日期范围
+const dateRange = ref<[DateModelType, DateModelType] | undefined>()
+
+// 监听日期变化
+watch(dateRange, (val) => {
+  const { startTime, endTime } = formatDateRange(val)
+  queryParams.value.startTime = startTime
+  queryParams.value.endTime = endTime
+})
 
 // 获取列表数据
 const getList = async () => {

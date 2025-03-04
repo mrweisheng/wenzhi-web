@@ -68,17 +68,29 @@
         </el-button>
       </template>
     </el-dialog>
+
+    <!-- 日期范围选择器 -->
+    <el-date-picker
+      v-model="dateRange"
+      type="daterange"
+      value-format="YYYY-MM-DD"
+      range-separator="至"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import type { Role, RoleForm } from '@/types/role'
 import { getRoles, createRole, updateRole, deleteRole, getRoleMenus } from '@/api/role'
 import { formatDate } from '@/utils/format'
 import { getMenus } from '@/api/menu'
+import type { DateModelType } from 'element-plus'
+import { formatDateRange } from '@/utils/date'
 
 const loading = ref(false)
 const roleList = ref<Role[]>([])
@@ -240,6 +252,16 @@ const handlePermissionSubmit = async () => {
     submitting.value = false
   }
 }
+
+// 日期范围
+const dateRange = ref<[DateModelType, DateModelType] | undefined>()
+
+// 监听日期变化
+watch(dateRange, (val) => {
+  const { startTime, endTime } = formatDateRange(val)
+  queryParams.value.startTime = startTime
+  queryParams.value.endTime = endTime
+})
 
 onMounted(() => {
   getRoleList()
