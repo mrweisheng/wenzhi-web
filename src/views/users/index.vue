@@ -159,6 +159,7 @@ import { getRoles } from '@/api/role'
 import type { UserInfo, UserForm, UserQuery } from '@/types/user'
 import type { Role } from '@/types/role'
 import { formatDate } from '@/utils/format'
+import type { ApiPageResponse } from '@/types/response'
 
 const loading = ref(false)
 const userList = ref<UserInfo[]>([])
@@ -199,16 +200,11 @@ const rules: FormRules = {
   ]
 }
 
-interface StatusOption {
-  label: string
-  value: 0 | 1
-}
-
 // 状态选项
-const statusOptions = ref<StatusOption[]>([
+const statusOptions = [
   { label: '启用', value: 1 },
   { label: '禁用', value: 0 }
-])
+] as const
 
 // 分页相关
 const total = ref(0)
@@ -224,7 +220,7 @@ const searchForm = ref({
 const getUserList = async () => {
   try {
     loading.value = true
-    const { data } = await getUsers(queryParams.value)
+    const { data } = await getUsers(queryParams.value) as ApiPageResponse<UserInfo>
     userList.value = data.list
     total.value = data.total
   } catch (error) {
@@ -352,7 +348,7 @@ const resetForm = () => {
 
 // 格式化状态显示
 const formatStatus = (status: number) => {
-  return statusOptions.find(item => item.value === status)?.label || '未知'
+  return statusOptions.find((item) => item.value === status)?.label || '未知'
 }
 
 onMounted(async () => {

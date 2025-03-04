@@ -239,11 +239,11 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { getOrders, processOrder } from '@/api/order'
 import type { Order, OrderQuery } from '@/types/order'
-import type { ApiResponse } from '@/types/response'
+import type { ApiResponse, ApiPageResponse } from '@/types/response'
 import { formatDate } from '@/utils/format'
 import { ElMessage } from 'element-plus'
 import type { FormInstance } from 'element-plus'
-import type { UploadFile, UploadFiles } from 'element-plus'
+import type { UploadFile, UploadFiles, UploadRawFile } from 'element-plus'
 
 // 数据加载状态
 const loading = ref(false)
@@ -262,7 +262,7 @@ const queryParams = ref<OrderQuery>({
 })
 
 // 日期范围
-const dateRange = ref<[string, string] | null>(null)
+const dateRange = ref<[Date, Date] | null>(null)
 
 // 渠道选项
 const channelOptions = [
@@ -313,20 +313,8 @@ const getChannelLabel = (channel: string) => {
 const getList = async () => {
   try {
     loading.value = true
-    // 处理日期范围
-    const params = {
-      ...queryParams.value,
-      startTime: dateRange.value?.[0],
-      endTime: dateRange.value?.[1]
-    }
-    const res = await getOrders(params)
-    orderList.value = res.data.list.map((order: Order) => ({
-      ...order,
-      amount: order.amount,
-      refund_amount: order.refund_amount,
-      fee: order.fee,
-      merchant_payment: order.merchant_payment
-    }))
+    const res = await getOrders(queryParams.value) as ApiPageResponse<Order>
+    orderList.value = res.data.list
     total.value = res.data.total
   } catch (error) {
     console.error('获取订单列表失败:', error)
@@ -388,11 +376,11 @@ const handleUpdateOrders = () => {
 
 // 文件上传相关
 const handleOrderFileChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
-  orderFile.value = uploadFile.raw
+  orderFile.value = uploadFile.raw as File
 }
 
 const handleRefundFileChange = (uploadFile: UploadFile, uploadFiles: UploadFiles) => {
-  refundFile.value = uploadFile.raw
+  refundFile.value = uploadFile.raw as File
 }
 
 // 判断是否可以提交

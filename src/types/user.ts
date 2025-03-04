@@ -35,6 +35,7 @@ export interface UserInfo {
   status: 0 | 1
   created_at: string
   updated_at: string
+  menus?: Menu[]
 }
 
 export interface UserQuery {

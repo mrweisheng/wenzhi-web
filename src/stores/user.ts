@@ -1,57 +1,23 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import type { UserInfo } from '../types/user'
+import type { UserInfo } from '@/types/user'
+import type { LoginResponse } from '@/types/auth'
 import { getUserInfo } from '@/api/auth'
 
-export const useUserStore = defineStore('user', () => {
-  const token = ref(localStorage.getItem('token') || '')
-  const refreshToken = ref(localStorage.getItem('refreshToken') || '')
-  const tokenExpires = ref(Number(localStorage.getItem('tokenExpires')) || 0)
-  const userInfo = ref<UserInfo | null>(null)
-
-  function setToken(accessToken: string, refresh: string, expires: number) {
-    token.value = accessToken
-    refreshToken.value = refresh
-    tokenExpires.value = expires
-    localStorage.setItem('token', accessToken)
-    localStorage.setItem('refreshToken', refresh)
-    localStorage.setItem('tokenExpires', expires.toString())
-  }
-
-  function setUserInfo(info: UserInfo) {
-    userInfo.value = info
-  }
-
-  function clearAuth() {
-    token.value = ''
-    refreshToken.value = ''
-    tokenExpires.value = 0
-    userInfo.value = null
-    localStorage.removeItem('token')
-    localStorage.removeItem('refreshToken')
-    localStorage.removeItem('tokenExpires')
-  }
-
-  // 获取用户信息的方法
-  async function getUserInfoAction() {
-    try {
-      const res = await getUserInfo()
-      setUserInfo(res.data)
-      return res.data
-    } catch (error) {
-      clearAuth()
-      throw error
+export const useUserStore = defineStore('user', {
+  state: () => ({
+    token: '',
+    refreshToken: '',
+    tokenExpires: 0,
+    userInfo: null as UserInfo | null
+  }),
+  actions: {
+    async getUserInfoAction() {
+      const { data } = await getUserInfo()
+      this.setUserInfo(data as UserInfo)
+    },
+    setUserInfo(info: UserInfo) {
+      this.userInfo = info
     }
-  }
-
-  return {
-    token,
-    refreshToken,
-    tokenExpires,
-    userInfo,
-    setToken,
-    setUserInfo,
-    clearAuth,
-    getUserInfoAction
   }
 }) 

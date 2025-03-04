@@ -76,9 +76,9 @@ const handleLogin = async () => {
   try {
     loading.value = true
     const { data } = await login(loginForm.value)
-    const { token, refreshToken, expires, userInfo } = data
+    const loginData = data as LoginResponse
+    const { token, refreshToken, expires, userInfo } = loginData
     
-    // 保存token和用户信息
     userStore.setToken(token, refreshToken, expires)
     userStore.setUserInfo(userInfo)
     
