@@ -220,9 +220,10 @@ const searchForm = ref({
 const getUserList = async () => {
   try {
     loading.value = true
-    const { data } = await getUsers(queryParams.value) as ApiPageResponse<UserInfo>
-    userList.value = data.list
-    total.value = data.total
+    const { data: response } = await getUsers(queryParams.value)
+    const { list, total: totalCount } = response.data
+    userList.value = list
+    total.value = totalCount
   } catch (error) {
     console.error('获取用户列表失败:', error)
   } finally {

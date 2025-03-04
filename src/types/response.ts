@@ -4,11 +4,9 @@ export interface ApiResponse<T = any> {
   data: T
 }
 
-export interface PageResponse<T = any> {
+export interface PageData<T = any> {
   list: T[]
   total: number
 }
 
-export interface ApiPageResponse<T = any> extends ApiResponse {
-  data: PageResponse<T>
-} 
+export type ApiPageResponse<T = any> = ApiResponse<PageData<T>> 

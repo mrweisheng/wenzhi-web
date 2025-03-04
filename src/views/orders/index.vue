@@ -262,7 +262,22 @@ const queryParams = ref<OrderQuery>({
 })
 
 // 日期范围
-const dateRange = ref<[string, string] | null>(null)
+const dateRange = ref<[Date, Date] | undefined>()
+
+// 获取列表数据
+const getList = async () => {
+  try {
+    loading.value = true
+    const { data: response } = await getOrders(queryParams.value)
+    const { list, total: totalCount } = response.data
+    orderList.value = list
+    total.value = totalCount
+  } catch (error) {
+    console.error('获取订单列表失败:', error)
+  } finally {
+    loading.value = false
+  }
+}
 
 // 监听日期范围变化
 watch(dateRange, (val) => {
@@ -320,20 +335,6 @@ const getChannelLabel = (channel: string) => {
   return map[channel] || channel
 }
 
-// 获取列表数据
-const getList = async () => {
-  try {
-    loading.value = true
-    const res = await getOrders(queryParams.value) as ApiPageResponse<Order>
-    orderList.value = res.data.list
-    total.value = res.data.total
-  } catch (error) {
-    console.error('获取订单列表失败:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
 // 搜索
 const handleSearch = () => {
   queryParams.value.page = 1
@@ -353,7 +354,7 @@ const resetQuery = () => {
     endTime: ''
   }
   // 重置日期范围
-  dateRange.value = null
+  dateRange.value = undefined
   // 重新查询
   getList()
 }

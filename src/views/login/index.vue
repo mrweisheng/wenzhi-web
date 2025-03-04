@@ -76,11 +76,15 @@ const handleLogin = async () => {
   try {
     loading.value = true
     const { data } = await login(loginForm.value)
-    const loginData = data as LoginResponse
+    const loginData = data.data as LoginResponse
     const { token, refreshToken, expires, userInfo } = loginData
     
     userStore.setToken(token, refreshToken, expires)
-    userStore.setUserInfo(userInfo)
+    userStore.setUserInfo({
+      ...userInfo,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    })
     
     ElMessage.success('登录成功')
     router.push('/dashboard')
