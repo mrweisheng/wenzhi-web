@@ -1,33 +1,49 @@
-import axios from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
-import { useUserStore } from '../stores/user'
+import { useUserStore } from '@/stores/user'
 
-const request = axios.create({
+interface RequestConfig extends AxiosRequestConfig {
+  showError?: boolean
+}
+
+const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 5000
+  timeout: 15000
 })
 
-request.interceptors.request.use(
-  config => {
+// 请求拦截器
+service.interceptors.request.use(
+  (config: RequestConfig) => {
     const userStore = useUserStore()
     if (userStore.token) {
       config.headers['Authorization'] = `Bearer ${userStore.token}`
     }
     return config
   },
-  error => {
+  (error) => {
+    console.error('Request error:', error)
     return Promise.reject(error)
   }
 )
 
-request.interceptors.response.use(
-  response => {
-    return response.data  // 直接返回后端数据，不做额外处理
+// 响应拦截器
+service.interceptors.response.use(
+  (response: AxiosResponse) => {
+    const res = response.data
+    if (res.code !== 0) {
+      ElMessage.error(res.message || '请求失败')
+      return Promise.reject(new Error(res.message || '请求失败'))
+    }
+    return res
   },
-  error => {
-    ElMessage.error(error.message || '请求失败')
+  (error) => {
+    console.error('Response error:', error)
+    const config = error.config as RequestConfig
+    if (config.showError !== false) {
+      ElMessage.error(error.response?.data?.message || '请求失败')
+    }
     return Promise.reject(error)
   }
 )
 
-export default request 
+export default service 

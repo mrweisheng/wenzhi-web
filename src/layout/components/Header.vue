@@ -46,17 +46,21 @@ import {
   User,
   SwitchButton
 } from '@element-plus/icons-vue'
-import type { PropType } from 'vue'
-import type { UserInfo } from '@/types/user'
 
-const emit = defineEmits(['update:collapsed'])
-const collapsed = ref(false)
+interface Props {
+  collapsed: boolean
+}
+
+const props = defineProps<Props>()
+const emit = defineEmits<{
+  'update:collapsed': [value: boolean]
+}>()
 
 const userStore = useUserStore()
 const router = useRouter()
 
 const toggleSidebar = () => {
-  emit('update:collapsed', !collapsed.value)
+  emit('update:collapsed', !props.collapsed)
 }
 
 const handleProfile = () => {

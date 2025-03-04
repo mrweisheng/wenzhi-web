@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 import type { LoginForm, LoginResponse } from '@/types/auth'
 
-export function login(data: LoginForm) {
+export function login(data: LoginForm): Promise<LoginResponse> {
   return request({
     url: '/api/auth/login',
     method: 'post',

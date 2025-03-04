@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { getRoles, createRole, updateRole, deleteRole } from '@/api/role'
 import { getMenus } from '@/api/menu'  // 确保使用正确的方法名
+import type { FormInstance, FormRules } from 'element-plus'
 import type { Role, RoleForm } from '@/types/role'
 import { ElMessageBox, ElMessage } from 'element-plus'
 

@@ -9,7 +9,11 @@ export const constantRoutes: AppRouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/login/index.vue')
+    component: () => import('../views/login/index.vue'),
+    meta: {
+      noAuth: true,
+      noLayout: true
+    }
   },
   {
     path: '/writer-application',

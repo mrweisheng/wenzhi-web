@@ -1,5 +1,6 @@
-import router from '@/router'
+import router from './index'
 import { useUserStore } from '@/stores/user'
+import { ElMessage } from 'element-plus'
 import type { RouteLocationNormalized, NavigationGuardNext } from 'vue-router'
 
 router.beforeEach(async (

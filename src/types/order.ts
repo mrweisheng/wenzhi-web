@@ -6,29 +6,26 @@ export type PaymentChannel = '支付宝' | '企业微信' | '慧辞' | '匠易�
 
 // 订单查询参数类型
 export interface OrderQuery {
-  page?: number
-  pageSize?: number
+  page: number
+  pageSize: number
   order_id?: string
   payment_id?: string
-  status?: OrderStatus
-  channel?: PaymentChannel
+  channel?: string
   startTime?: string
   endTime?: string
 }
 
 // 订单信息类型
 export interface Order {
+  id: number
   order_id: string
   payment_id: string
-  amount: string
-  status: OrderStatus
-  create_time: string
-  merchant_remark: string
-  refund_amount: string
-  fee: string
-  channel: PaymentChannel
-  confirm_time: string
-  merchant_payment: string
+  channel: string
+  amount: number
+  refund_amount: number
+  fee: number
+  merchant_payment: number
+  status: string
   created_at: string
   updated_at: string
 }

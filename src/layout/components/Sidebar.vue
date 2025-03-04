@@ -32,9 +32,11 @@ import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import type { Menu } from '@/types/user'
 
-defineProps<{
+interface Props {
   collapsed: boolean
-}>()
+}
+
+defineProps<Props>()
 
 const route = useRoute()
 const userStore = useUserStore()
