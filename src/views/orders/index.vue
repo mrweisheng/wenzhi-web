@@ -252,7 +252,11 @@ const total = ref(0)
 const queryParams = ref<OrderQuery>({
   page: 1,
   pageSize: 10,
-  channel: '' // 默认全部
+  order_id: '',
+  payment_id: '',
+  channel: '',
+  startTime: '',
+  endTime: ''
 })
 
 // 日期范围
@@ -343,7 +347,9 @@ const resetQuery = () => {
     pageSize: 10,
     order_id: '',
     payment_id: '',
-    channel: '' // 默认全部
+    channel: '',
+    startTime: '',
+    endTime: ''
   }
   // 重置日期范围
   dateRange.value = null
@@ -378,13 +384,17 @@ const handleUpdateOrders = () => {
   refundFile.value = null
 }
 
-// 处理订单文件变化
-const handleOrderFileChange = (file: any) => {
+// 文件上传相关
+interface UploadFile {
+  raw: File
+  name: string
+}
+
+const handleOrderFileChange = (file: UploadFile) => {
   orderFile.value = file.raw
 }
 
-// 处理退款文件变化
-const handleRefundFileChange = (file: any) => {
+const handleRefundFileChange = (file: UploadFile) => {
   refundFile.value = file.raw
 }
 

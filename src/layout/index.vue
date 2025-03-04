@@ -16,10 +16,11 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Ref } from 'vue'
 import Sidebar from '@/layout/components/Sidebar.vue'
 import Header from '@/layout/components/Header.vue'
 
-const collapsed = ref(false)
+const collapsed: Ref<boolean> = ref(false)
 </script>
 
 <style lang="scss" scoped>

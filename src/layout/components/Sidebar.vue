@@ -30,6 +30,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import type { Menu } from '@/types/user'
 
 defineProps<{
   collapsed: boolean

@@ -75,7 +75,7 @@
 import { ref, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import type { Role } from '@/types/role'
+import type { Role, RoleForm } from '@/types/role'
 import { getRoles, createRole, updateRole, deleteRole, getRoleMenus } from '@/api/role'
 import { formatDate } from '@/utils/format'
 import { getMenus } from '@/api/menu'

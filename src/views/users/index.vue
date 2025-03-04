@@ -177,10 +177,17 @@ const userForm = ref<UserForm>({
   status: 1
 })
 
-const queryParams = ref({
-  username: '',
-  role_id: undefined,
-  status: undefined
+// 查询参数
+interface UserQuery {
+  username?: string
+  status?: number
+  page: number
+  pageSize: number
+}
+
+const queryParams = ref<UserQuery>({
+  page: 1,
+  pageSize: 10
 })
 
 const rules: FormRules = {
@@ -253,7 +260,9 @@ const resetQuery = () => {
   queryParams.value = {
     username: '',
     role_id: undefined,
-    status: undefined
+    status: undefined,
+    page: 1,
+    pageSize: 10
   }
   console.log('重置后:', queryParams.value)  // 添加日志打印
   getUserList()

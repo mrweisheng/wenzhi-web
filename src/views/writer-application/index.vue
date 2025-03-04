@@ -113,6 +113,8 @@ import { ElMessage } from 'element-plus'
 import { CircleCheckFilled } from '@element-plus/icons-vue'
 import { createWriter } from '@/api/writer'
 import type { FormInstance, FormRules } from 'element-plus'
+import type { WriterForm } from '@/types/writer'
+import { getClientIp } from '@/utils/ip'
 
 const route = useRoute()
 const router = useRouter()
@@ -138,7 +140,7 @@ onMounted(() => {
 })
 
 // 表单数据
-const applicationForm = ref({
+const applicationForm = ref<WriterForm>({
   name: '',
   education: '',
   major: '',
@@ -148,7 +150,8 @@ const applicationForm = ref({
   phone_2: '',
   alipay_name: '',
   alipay_account: '',
-  id_number: ''
+  id_number: '',
+  ip_address: ''
 })
 
 // 表单校验规则

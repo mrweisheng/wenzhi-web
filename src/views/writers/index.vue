@@ -266,7 +266,7 @@
       v-model="viewDialogVisible"
       width="700px"
     >
-      <el-descriptions :column="2" border>
+      <el-descriptions v-if="viewData" :column="2" border>
         <el-descriptions-item label="写手ID">{{ viewData.writer_id }}</el-descriptions-item>
         <el-descriptions-item label="姓名">{{ viewData.name }}</el-descriptions-item>
         <el-descriptions-item label="学历">{{ viewData.education }}</el-descriptions-item>
@@ -318,7 +318,8 @@ import {
   createWriter, 
   updateWriter, 
   deleteWriter,
-  batchDeleteWriters
+  batchDeleteWriters,
+  generateApplicationToken
 } from '@/api/writer'
 import type { Writer, WriterForm, WriterQuery } from '@/types/writer'
 import { formatDate } from '@/utils/format'
@@ -421,7 +422,7 @@ const selectedSpecialized = ref<string[]>([])
 // 二维码相关
 const qrDialogVisible = ref(false)
 const qrCodeRef = ref<HTMLElement>()
-let qrcode: any = null
+let qrcode: InstanceType<typeof QRCode> | null = null
 
 // 获取列表数据
 const getList = async () => {
@@ -609,25 +610,33 @@ const toggleSpecialized = (value: string) => {
 }
 
 // 生成二维码
-const handleGenerateQR = () => {
-  qrDialogVisible.value = true
-  // 生成一个简单的临时令牌
-  const tempToken = `apply_${Date.now()}`
-  
-  nextTick(() => {
+const handleGenerateQR = async () => {
+  try {
+    const res = await generateApplicationToken()
+    const url = `${import.meta.env.VITE_LOCAL_URL}/writer-application?token=${res.data.token}`
+    
+    qrDialogVisible.value = true
+    
+    // 等待 DOM 更新
+    await nextTick()
+    
     if (qrCodeRef.value) {
-      qrCodeRef.value.innerHTML = ''
-      const applicationUrl = `http://192.168.31.207:5173/writer-application?token=${tempToken}`
+      if (qrcode) {
+        qrcode.clear()
+      }
       qrcode = new QRCode(qrCodeRef.value, {
-        text: applicationUrl,
-        width: 256,
-        height: 256,
+        text: url,
+        width: 200,
+        height: 200,
         colorDark: '#000000',
         colorLight: '#ffffff',
         correctLevel: QRCode.CorrectLevel.H
       })
     }
-  })
+  } catch (error) {
+    console.error('生成二维码失败:', error)
+    ElMessage.error('生成二维码失败')
+  }
 }
 
 // 保存二维码
