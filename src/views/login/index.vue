@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <el-form
-      ref="loginFormRef"
+      ref="formRef"
       :model="loginForm"
       :rules="loginRules"
       class="login-form"

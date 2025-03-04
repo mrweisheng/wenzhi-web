@@ -89,7 +89,7 @@ router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   
   // 检查是否需要登录
-  if (to.meta.noAuth) {
+  if (to.meta?.noAuth) {
     next()
     return
   }

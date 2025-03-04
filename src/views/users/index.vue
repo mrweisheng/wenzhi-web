@@ -156,7 +156,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { getUsers, createUser, updateUser, deleteUser, updateUserStatus } from '@/api/user'
 import { getRoles } from '@/api/role'
-import type { UserInfo, UserForm } from '@/types/user'
+import type { UserInfo, UserForm, UserQuery } from '@/types/user'
 import type { Role } from '@/types/role'
 import { formatDate } from '@/utils/format'
 
@@ -178,17 +178,12 @@ const userForm = ref<UserForm>({
 })
 
 // 查询参数
-interface UserQuery {
-  username?: string
-  role_id?: number
-  status?: number
-  page: number
-  pageSize: number
-}
-
 const queryParams = ref<UserQuery>({
   page: 1,
-  pageSize: 10
+  pageSize: 10,
+  username: '',
+  role_id: undefined,
+  status: undefined
 })
 
 const rules: FormRules = {

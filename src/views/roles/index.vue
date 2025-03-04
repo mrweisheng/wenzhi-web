@@ -88,11 +88,9 @@ const permissionDialogVisible = ref(false)
 const submitting = ref(false)
 
 const formRef = ref<FormInstance>()
-const roleForm = ref<Role>({
-  id: undefined,
+const roleForm = ref<RoleForm>({
   role_name: '',
-  created_at: '',
-  updated_at: '',
+  description: '',
   menu_ids: []
 })
 
@@ -174,10 +172,8 @@ const resetForm = () => {
     formRef.value.resetFields()
   }
   roleForm.value = {
-    id: undefined,
     role_name: '',
-    created_at: '',
-    updated_at: '',
+    description: '',
     menu_ids: []
   }
 }
