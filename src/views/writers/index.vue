@@ -533,7 +533,11 @@ const handleSubmit = async () => {
     }
     
     if (dialogTitle.value === '编辑写手') {
-      await updateWriter(submitData.writer_id, submitData)
+      if (!submitData.writer_id) {
+        ElMessage.error('写手ID不能为空')
+        return
+      }
+      await updateWriter(submitData.id!, submitData)
       ElMessage.success('更新成功')
     } else {
       await createWriter(submitData)

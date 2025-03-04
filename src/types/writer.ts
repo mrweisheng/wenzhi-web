@@ -24,7 +24,7 @@ export interface Writer {
 // 写手表单类型
 export interface WriterForm {
   id?: number
-  writer_id: string
+  writer_id?: string
   name: string
   education: string
   major: string
