@@ -1,11 +1,11 @@
 <template>
   <el-container class="layout-container">
     <el-header class="header">
-      <Header />
+      <Header :collapsed="collapsed" @update:collapsed="collapsed = $event" />
     </el-header>
     <el-container>
       <el-aside :width="collapsed ? '64px' : '200px'" class="aside">
-        <Sidebar v-model:collapsed="collapsed" />
+        <Sidebar :collapsed="collapsed" />
       </el-aside>
       <el-main class="main">
         <router-view />
@@ -16,11 +16,10 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { Ref } from 'vue'
-import Sidebar from '@/layout/components/Sidebar.vue'
-import Header from '@/layout/components/Header.vue'
+import Sidebar from './components/Sidebar.vue'
+import Header from './components/Header.vue'
 
-const collapsed: Ref<boolean> = ref(false)
+const collapsed = ref(false)
 </script>
 
 <style lang="scss" scoped>

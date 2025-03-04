@@ -9,9 +9,10 @@ export function getRoles() {
   })
 }
 
+// 创建角色
 export function createRole(data: RoleForm) {
   return request({
-    url: '/roles',
+    url: '/api/roles',
     method: 'post',
     data
   })

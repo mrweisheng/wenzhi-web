@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { useRouter } from 'vue-router'
 import { ElMessageBox } from 'element-plus'
@@ -48,22 +49,14 @@ import {
 import type { PropType } from 'vue'
 import type { UserInfo } from '@/types/user'
 
-defineProps({
-  collapsed: {
-    type: Boolean,
-    required: true
-  }
-})
-
-const emit = defineEmits<{
-  (e: 'update:collapsed', value: boolean): void
-}>()
+const emit = defineEmits(['update:collapsed'])
+const collapsed = ref(false)
 
 const userStore = useUserStore()
 const router = useRouter()
 
 const toggleSidebar = () => {
-  emit('update:collapsed', !collapsed)
+  emit('update:collapsed', !collapsed.value)
 }
 
 const handleProfile = () => {
