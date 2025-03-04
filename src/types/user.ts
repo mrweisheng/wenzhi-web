@@ -36,6 +36,7 @@ export interface UserInfo {
   created_at: string
   updated_at: string
   menus?: Menu[]
+  role?: Role
 }
 
 export interface UserQuery {

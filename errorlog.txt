@@ -1,18 +1,30 @@
-root@iZhyhoz8h642yaZ:~/home/wenzhi-web# npm run build
-
-> wenzhi-frontend@0.0.0 build
 > vue-tsc --noEmit && vite build
 
-src/layout/components/Sidebar.vue:15:54 - error TS2339: Property 'menus' does not exist on type '{ id: number; username: string; role_id: number; status: 0 | 1; created_at: string; updated_at: string; }'.
+src/layout/components/Header.vue:75:15 - error TS2339: Property 'clearAuth' does not exist on type 'Store<"user", { token: string; refreshToken: string; tokenExpires: number; userInfo: UserInfo | null; }, {}, { getUserInfoAction(): Promise<void>; setUserInfo(info: UserInfo): void; }>'.
 
-15         <template v-for="menu in userStore.userInfo?.menus" :key="menu.id">
-                                                        ~~~~~
+75     userStore.clearAuth()
+                 ~~~~~~~~~
 
-src/stores/user.ts:39:19 - error TS2345: Argument of type 'ApiResponse<any>' is not assignable to parameter of type 'UserInfo'.
+src/router/index.ts:110:15 - error TS2339: Property 'clearAuth' does not exist on type 'Store<"user", { token: string; refreshToken: string; tokenExpires: number; userInfo: UserInfo | null; }, {}, { getUserInfoAction(): Promise<void>; setUserInfo(info: UserInfo): void; }>'.
+
+110     userStore.clearAuth()
+                  ~~~~~~~~~
+
+src/router/index.ts:121:17 - error TS2339: Property 'clearAuth' does not exist on type 'Store<"user", { token: string; refreshToken: string; tokenExpires: number; userInfo: UserInfo | null; }, {}, { getUserInfoAction(): Promise<void>; setUserInfo(info: UserInfo): void; }>'.
+
+121       userStore.clearAuth()
+                    ~~~~~~~~~
+
+src/router/permission.ts:23:21 - error TS2339: Property 'clearAuth' does not exist on type 'Store<"user", { token: string; refreshToken: string; tokenExpires: number; userInfo: UserInfo | null; }, {}, { getUserInfoAction(): Promise<void>; setUserInfo(info: UserInfo): void; }>'.
+
+23           userStore.clearAuth()
+                       ~~~~~~~~~
+
+src/stores/user.ts:17:24 - error TS2352: Conversion of type 'ApiResponse<any>' to type 'UserInfo' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
   Type 'ApiResponse<any>' is missing the following properties from type 'UserInfo': id, username, role_id, status, and 2 more.
 
-39       setUserInfo(res.data)
-                     ~~~~~~~~
+17       this.setUserInfo(data as UserInfo)
+                          ~~~~~~~~~~~~~~~~
 
 src/utils/request.ts:33:3 - error TS2345: Argument of type '(response: AxiosResponse<ApiResponse>) => Promise<AxiosResponse<any, any>> | Promise<ApiResponse<any>>' is not assignable to parameter of type '(value: AxiosResponse<any, any>) => AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
   Type 'Promise<AxiosResponse<any, any>> | Promise<ApiResponse<any>>' is not assignable to type 'AxiosResponse<any, any> | Promise<AxiosResponse<any, any>>'.
@@ -23,27 +35,24 @@ src/utils/request.ts:33:3 - error TS2345: Argument of type '(response: AxiosResp
 33   (response: AxiosResponse<ApiResponse>) => {
      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-src/views/login/index.vue:79:13 - error TS2339: Property 'token' does not exist on type 'ApiResponse<any>'.
+src/views/login/index.vue:79:23 - error TS2352: Conversion of type 'ApiResponse<any>' to type 'LoginResponse' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'ApiResponse<any>' is missing the following properties from type 'LoginResponse': token, refreshToken, expires, userInfo
 
-79     const { token, refreshToken, expires, userInfo } = data
-               ~~~~~
+79     const loginData = data as LoginResponse
+                         ~~~~~~~~~~~~~~~~~~~~~
 
-src/views/login/index.vue:79:20 - error TS2339: Property 'refreshToken' does not exist on type 'ApiResponse<any>'.
+src/views/login/index.vue:82:15 - error TS2339: Property 'setToken' does not exist on type 'Store<"user", { token: string; refreshToken: string; tokenExpires: number; userInfo: UserInfo | null; }, {}, { getUserInfoAction(): Promise<void>; setUserInfo(info: UserInfo): void; }>'.
 
-79     const { token, refreshToken, expires, userInfo } = data
-                      ~~~~~~~~~~~~
+82     userStore.setToken(token, refreshToken, expires)
+                 ~~~~~~~~
 
-src/views/login/index.vue:79:34 - error TS2339: Property 'expires' does not exist on type 'ApiResponse<any>'.
+src/views/login/index.vue:83:27 - error TS2345: Argument of type '{ id: number; username: string; role_id: number; status: 0 | 1; menus: Menu[]; }' is not assignable to parameter of type 'UserInfo'.
+  Type '{ id: number; username: string; role_id: number; status: 0 | 1; menus: Menu[]; }' is missing the following properties from type 'UserInfo': created_at, updated_at
 
-79     const { token, refreshToken, expires, userInfo } = data
-                                    ~~~~~~~
+83     userStore.setUserInfo(userInfo)
+                             ~~~~~~~~
 
-src/views/login/index.vue:79:43 - error TS2339: Property 'userInfo' does not exist on type 'ApiResponse<any>'.
-
-79     const { token, refreshToken, expires, userInfo } = data
-                                             ~~~~~~~~
-
-src/views/orders/index.vue:45:15 - error TS2322: Type '[string, string] | null' is not assignable to type 'EpPropMergeType<(new (...args: any[]) => string | number | string[] | Date | [DateModelType, DateModelType]) | (() => ModelValueType) | ((new (...args: any[]) => string | ... 3 more ... | [...]) | (() => ModelValueType))[], unknown, unknown> | undefined'.
+src/views/orders/index.vue:45:15 - error TS2322: Type '[Date, Date] | null' is not assignable to type 'EpPropMergeType<(new (...args: any[]) => string | number | string[] | Date | [DateModelType, DateModelType]) | (() => ModelValueType) | ((new (...args: any[]) => string | ... 3 more ... | [...]) | (() => ModelValueType))[], unknown, unknown> | undefined'.
 
 45               v-model="dateRange"
                  ~~~~~~~
@@ -53,54 +62,17 @@ src/views/orders/index.vue:45:15 - error TS2322: Type '[string, string] | null' 
                      ~~~~~~~~~~
     The expected type comes from property 'modelValue' which is declared here on type 'Partial<{ readonly disabled: boolean; readonly type: EpPropMergeType<(new (...args: any[]) => "year" | "month" | "date" | "years" | "months" | "dates" | "week" | "datetime" | "datetimerange" | "daterange" | "monthrange" | "yearrange") | (() => IDatePickerType) | ((new (...args: any[]) => "year" | ... 10 more ... | "...'
 
-src/views/orders/index.vue:323:32 - error TS2339: Property 'list' does not exist on type 'ApiResponse<any>'.
+src/views/orders/index.vue:316:17 - error TS2352: Conversion of type 'AxiosResponse<ApiResponse<any>, any>' to type 'ApiPageResponse<Order>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'AxiosResponse<ApiResponse<any>, any>' is missing the following properties from type 'ApiPageResponse<Order>': code, message
 
-323     orderList.value = res.data.list.map((order: Order) => ({
-                                   ~~~~
+316     const res = await getOrders(queryParams.value) as ApiPageResponse<Order>
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-src/views/orders/index.vue:330:28 - error TS2339: Property 'total' does not exist on type 'ApiResponse<any>'.
+src/views/users/index.vue:223:22 - error TS2352: Conversion of type 'AxiosResponse<ApiResponse<any>, any>' to type 'ApiPageResponse<UserInfo>' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type 'AxiosResponse<ApiResponse<any>, any>' is missing the following properties from type 'ApiPageResponse<UserInfo>': code, message
 
-330     total.value = res.data.total
-                               ~~~~~
-
-src/views/orders/index.vue:391:3 - error TS2322: Type 'UploadRawFile | undefined' is not assignable to type 'File | { readonly lastModified: number; readonly name: string; readonly webkitRelativePath: string; readonly size: number; readonly type: string; arrayBuffer: () => Promise<ArrayBuffer>; slice: (start?: number | undefined, end?: number | undefined, contentType?: string | undefined) => Blob; stream: () => ReadableStr...'.
-  Type 'undefined' is not assignable to type 'File | { readonly lastModified: number; readonly name: string; readonly webkitRelativePath: string; readonly size: number; readonly type: string; arrayBuffer: () => Promise<ArrayBuffer>; slice: (start?: number | undefined, end?: number | undefined, contentType?: string | undefined) => Blob; stream: () => ReadableStr...'.
-
-391   orderFile.value = uploadFile.raw
-      ~~~~~~~~~~~~~~~
-
-src/views/orders/index.vue:395:3 - error TS2322: Type 'UploadRawFile | undefined' is not assignable to type 'File | { readonly lastModified: number; readonly name: string; readonly webkitRelativePath: string; readonly size: number; readonly type: string; arrayBuffer: () => Promise<ArrayBuffer>; slice: (start?: number | undefined, end?: number | undefined, contentType?: string | undefined) => Blob; stream: () => ReadableStr...'.
-
-395   refundFile.value = uploadFile.raw
-      ~~~~~~~~~~~~~~~~
-
-src/views/users/index.vue:228:27 - error TS2339: Property 'list' does not exist on type 'ApiResponse<any>'.
-
-228     userList.value = data.list
-                              ~~~~
-
-src/views/users/index.vue:229:24 - error TS2339: Property 'total' does not exist on type 'ApiResponse<any>'.
-
-229     total.value = data.total
-                           ~~~~~
-
-src/views/users/index.vue:355:24 - error TS2339: Property 'find' does not exist on type 'Ref<{ label: string; value: 0 | 1; }[], StatusOption[] | { label: string; value: 0 | 1; }[]>'.
-
-355   return statusOptions.find(item => item.value === status)?.label || '未知'
-                           ~~~~
-
-src/views/users/index.vue:355:29 - error TS7006: Parameter 'item' implicitly has an 'any' type.
-
-355   return statusOptions.find(item => item.value === status)?.label || '未知'
-                                ~~~~
+223     const { data } = await getUsers(queryParams.value) as ApiPageResponse<UserInfo>
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
-Found 16 errors in 6 files.
-
-Errors  Files
-     1  src/layout/components/Sidebar.vue:15
-     1  src/stores/user.ts:39
-     1  src/utils/request.ts:33
-     4  src/views/login/index.vue:79
-     5  src/views/orders/index.vue:45
-     4  src/views/users/index.vue:228
+Found 12 errors in 8 files.

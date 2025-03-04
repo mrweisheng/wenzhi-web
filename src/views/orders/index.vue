@@ -262,7 +262,18 @@ const queryParams = ref<OrderQuery>({
 })
 
 // 日期范围
-const dateRange = ref<[Date, Date] | null>(null)
+const dateRange = ref<[string, string] | null>(null)
+
+// 监听日期范围变化
+watch(dateRange, (val) => {
+  if (val) {
+    queryParams.value.startTime = formatDate(val[0])
+    queryParams.value.endTime = formatDate(val[1])
+  } else {
+    queryParams.value.startTime = ''
+    queryParams.value.endTime = ''
+  }
+})
 
 // 渠道选项
 const channelOptions = [
