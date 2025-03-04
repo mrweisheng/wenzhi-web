@@ -365,7 +365,7 @@ const writerForm = ref<WriterForm>({
 })
 
 // 查看详情数据
-const viewData = ref<Writer>({} as Writer)
+const viewData = ref<Writer | null>(null)
 
 // 表单校验规则
 const rules: FormRules = {
@@ -470,8 +470,21 @@ const handleAdd = () => {
 // 编辑
 const handleEdit = (row: Writer) => {
   dialogTitle.value = '编辑写手'
-  writerForm.value = { ...row }
-  // 将分号分隔的字符串转换为数组
+  writerForm.value = {
+    id: row.id,
+    writer_id: row.writer_id,
+    name: row.name,
+    education: row.education,
+    major: row.major,
+    writing_experience: row.writing_experience,
+    specialized_content: row.specialized_content,
+    phone_1: row.phone_1,
+    phone_2: row.phone_2,
+    alipay_name: row.alipay_name,
+    alipay_account: row.alipay_account,
+    id_number: row.id_number,
+    ip_address: row.ip_address
+  }
   selectedSpecialized.value = row.specialized_content ? row.specialized_content.split(';') : []
   dialogVisible.value = true
 }
