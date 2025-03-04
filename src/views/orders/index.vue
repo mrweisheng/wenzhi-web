@@ -262,7 +262,7 @@ const queryParams = ref<OrderQuery>({
 })
 
 // 日期范围
-const dateRange = ref<[Date, Date] | undefined>()
+const dateRange = ref<[string, string] | null>(null)
 
 // 获取列表数据
 const getList = async () => {
@@ -282,8 +282,8 @@ const getList = async () => {
 // 监听日期范围变化
 watch(dateRange, (val) => {
   if (val) {
-    queryParams.value.startTime = formatDate(val[0])
-    queryParams.value.endTime = formatDate(val[1])
+    queryParams.value.startTime = val[0]
+    queryParams.value.endTime = val[1]
   } else {
     queryParams.value.startTime = ''
     queryParams.value.endTime = ''
@@ -354,7 +354,7 @@ const resetQuery = () => {
     endTime: ''
   }
   // 重置日期范围
-  dateRange.value = undefined
+  dateRange.value = null
   // 重新查询
   getList()
 }
