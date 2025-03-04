@@ -45,4 +45,6 @@ export interface UserQuery {
   username?: string
   role_id?: number
   status?: 0 | 1
+  startTime?: string
+  endTime?: string
 }

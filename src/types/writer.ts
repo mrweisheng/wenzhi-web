@@ -34,8 +34,9 @@ export interface WriterForm {
   phone_2?: string
   alipay_name?: string
   alipay_account?: string
-  id_number?: string
+  id_number: string
   ip_address?: string
+  apply_date?: string
 }
 
 // 查询参数类型
@@ -46,4 +47,6 @@ export interface WriterQuery {
   name?: string
   education?: string
   writing_experience?: string
+  startTime?: string
+  endTime?: string
 } 

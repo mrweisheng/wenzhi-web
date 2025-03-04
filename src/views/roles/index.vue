@@ -118,6 +118,15 @@ const rules: FormRules = {
   ]
 }
 
+// 查询参数
+const queryParams = ref({
+  page: 1,
+  pageSize: 10,
+  role_name: '',
+  startTime: '',
+  endTime: ''
+})
+
 // 获取角色列表
 const getRoleList = async () => {
   try {
@@ -262,6 +271,19 @@ watch(dateRange, (val) => {
   queryParams.value.startTime = startTime
   queryParams.value.endTime = endTime
 })
+
+// 重置查询
+const resetQuery = () => {
+  queryParams.value = {
+    page: 1,
+    pageSize: 10,
+    role_name: '',
+    startTime: '',
+    endTime: ''
+  }
+  dateRange.value = undefined
+  getRoleList()
+}
 
 onMounted(() => {
   getRoleList()

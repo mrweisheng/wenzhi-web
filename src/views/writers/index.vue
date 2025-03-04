@@ -349,11 +349,14 @@ const selectedIds = ref<number[]>([])
 
 // 查询参数
 const queryParams = ref<WriterQuery>({
+  page: 1,
+  pageSize: 10,
+  writer_id: '',
   name: '',
   education: '',
   writing_experience: '',
-  page: 1,
-  pageSize: 10
+  startTime: '',
+  endTime: ''
 })
 
 // 对话框控制
@@ -469,12 +472,16 @@ const handleSearch = () => {
 // 重置查询
 const resetQuery = () => {
   queryParams.value = {
+    page: 1,
+    pageSize: 10,
+    writer_id: '',
     name: '',
     education: '',
     writing_experience: '',
-    page: 1,
-    pageSize: 10
+    startTime: '',
+    endTime: ''
   }
+  dateRange.value = undefined
   getList()
 }
 

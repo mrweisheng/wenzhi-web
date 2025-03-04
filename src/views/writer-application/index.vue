@@ -247,21 +247,15 @@ const handleSubmit = async () => {
   if (!formRef.value) return
   
   try {
-    // 先进行表单验证
     await formRef.value.validate()
-    
-    // 验证擅长内容是否选择
-    if (selectedSpecialized.value.length === 0) {
-      ElMessage.error('请选择擅长内容')
-      return
-    }
     
     submitting.value = true
     const ip = await getClientIp()
-    const submitData = {
+    const submitData: WriterForm = {
       ...applicationForm.value,
       specialized_content: selectedSpecialized.value.join(';'),
-      ip_address: ip
+      ip_address: ip,
+      apply_date: applicationForm.value.apply_date
     }
     const res = await createWriter(submitData)
     submittedWriterId.value = res.data.writer_id

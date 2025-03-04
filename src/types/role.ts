@@ -11,4 +11,12 @@ export interface RoleForm {
   role_name: string
   description?: string
   menu_ids?: number[]
+}
+
+export interface RoleQuery {
+  page: number
+  pageSize: number
+  role_name?: string
+  startTime?: string
+  endTime?: string
 } 
