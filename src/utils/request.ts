@@ -1,9 +1,10 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios from 'axios'
+import type { AxiosInstance, InternalAxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 import type { ApiResponse } from '@/types/response'
 
-interface RequestConfig extends AxiosRequestConfig {
+interface RequestConfig extends InternalAxiosRequestConfig {
   showError?: boolean
 }
 
@@ -14,7 +15,7 @@ const service: AxiosInstance = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use(
-  (config: RequestConfig) => {
+  (config: InternalAxiosRequestConfig) => {
     const userStore = useUserStore()
     if (userStore.token && config.headers) {
       config.headers['Authorization'] = `Bearer ${userStore.token}`
