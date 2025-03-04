@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/stores/user'
+import type { ApiResponse } from '@/types/response'
 
 interface RequestConfig extends AxiosRequestConfig {
   showError?: boolean
@@ -15,7 +16,7 @@ const service: AxiosInstance = axios.create({
 service.interceptors.request.use(
   (config: RequestConfig) => {
     const userStore = useUserStore()
-    if (userStore.token) {
+    if (userStore.token && config.headers) {
       config.headers['Authorization'] = `Bearer ${userStore.token}`
     }
     return config
@@ -28,7 +29,7 @@ service.interceptors.request.use(
 
 // 响应拦截器
 service.interceptors.response.use(
-  (response: AxiosResponse) => {
+  (response: AxiosResponse<ApiResponse>) => {
     const res = response.data
     if (res.code !== 0) {
       ElMessage.error(res.message || '请求失败')

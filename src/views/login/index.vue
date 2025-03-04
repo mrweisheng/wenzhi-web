@@ -48,16 +48,17 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
-import type { FormInstance } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
 import { useUserStore } from '@/stores/user'
 import { login } from '@/api/auth'
+import type { LoginForm } from '@/types/auth'
 
 const router = useRouter()
 const userStore = useUserStore()
+const formRef = ref<FormInstance>()
 
-const loginFormRef = ref<FormInstance>()
 const loading = ref(false)
-const loginForm = ref({
+const loginForm = ref<LoginForm>({
   username: '',
   password: ''
 })
@@ -68,9 +69,9 @@ const loginRules = {
 }
 
 const handleLogin = async () => {
-  if (!loginFormRef.value) return
+  if (!formRef.value) return
   
-  await loginFormRef.value.validate()
+  await formRef.value.validate()
   
   try {
     loading.value = true
