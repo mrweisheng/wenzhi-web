@@ -398,7 +398,6 @@ const rules: FormRules = {
     { required: true, message: '请选择写作水平', trigger: 'change' }
   ],
   id_number: [
-    { required: true, message: '请输入身份证号', trigger: 'blur' },
     { pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/, message: '请输入正确的身份证号', trigger: 'blur' }
   ]
 }
@@ -512,10 +511,10 @@ const handleEdit = (row: Writer) => {
     phone_2: row.phone_2,
     alipay_name: row.alipay_name,
     alipay_account: row.alipay_account,
-    id_number: row.id_number,
+    id_number: row.id_number || '',
     ip_address: row.ip_address
   }
-  selectedSpecialized.value = row.specialized_content ? row.specialized_content.split(';') : []
+  selectedSpecialized.value = row.specialized_content?.split(';') || []
   dialogVisible.value = true
 }
 

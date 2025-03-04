@@ -34,7 +34,7 @@ export interface WriterForm {
   phone_2?: string
   alipay_name?: string
   alipay_account?: string
-  id_number: string
+  id_number?: string
   ip_address?: string
   apply_date?: string
 }
