@@ -1,18 +1,19 @@
 import request from '@/utils/request'
-import type { UserForm } from '@/types/user'
+import type { UserForm, UserQuery } from '@/types/user'
 
 // 获取用户列表
-export function getUsers() {
+export function getUsers(params: UserQuery) {
   return request({
     url: '/api/users',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
 // 创建用户
 export function createUser(data: UserForm) {
   return request({
-    url: '/users',
+    url: '/api/users',
     method: 'post',
     data
   })

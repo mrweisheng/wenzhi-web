@@ -221,30 +221,33 @@ const toggleSpecialized = (value: string) => {
   applicationForm.value.specialized_content = selectedSpecialized.value.join(';')
 }
 
-// 在表单提交前验证擅长内容是否选择
+// 提交表单
 const handleSubmit = async () => {
   if (!formRef.value) return
   
-  if (selectedSpecialized.value.length === 0) {
-    ElMessage.error('请选择擅长内容')
-    return
-  }
-  
   try {
+    // 先进行表单验证
     await formRef.value.validate()
+    
+    // 验证擅长内容是否选择
+    if (selectedSpecialized.value.length === 0) {
+      ElMessage.error('请选择擅长内容')
+      return
+    }
+    
     submitting.value = true
-    
-    const res = await createWriter({
+    const ip = await getClientIp()
+    const submitData = {
       ...applicationForm.value,
-      specialized_content: selectedSpecialized.value.join(';')
-    })
-    
-    // 显示成功信息
+      specialized_content: selectedSpecialized.value.join(';'),
+      ip_address: ip
+    }
+    const res = await createWriter(submitData)
     submittedWriterId.value = res.data.writer_id
     successDialogVisible.value = true
-  } catch (error: any) {
+  } catch (error) {
     console.error('提交申请失败:', error)
-    ElMessage.error(error.response?.data?.message || '提交失败，请稍后重试')
+    ElMessage.error('提交失败，请稍后重试')
   } finally {
     submitting.value = false
   }

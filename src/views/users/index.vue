@@ -180,6 +180,7 @@ const userForm = ref<UserForm>({
 // 查询参数
 interface UserQuery {
   username?: string
+  role_id?: number
   status?: number
   page: number
   pageSize: number
@@ -221,17 +222,11 @@ const searchForm = ref({
 const getUserList = async () => {
   try {
     loading.value = true
-    // 使用 queryParams 而不是 searchForm
-    const params = {
-      username: queryParams.value.username || undefined,
-      role_id: queryParams.value.role_id || undefined,
-      status: queryParams.value.status || undefined
-    }
-    console.log('搜索参数:', params)  // 添加日志打印
-    const res = await getUsers(params)
-    userList.value = res.data
+    const res = await getUsers(queryParams.value)
+    userList.value = res.data.list
+    total.value = res.data.total
   } catch (error) {
-    console.error('Get users error:', error)
+    console.error('获取用户列表失败:', error)
   } finally {
     loading.value = false
   }
@@ -256,15 +251,13 @@ const handleSearch = () => {
 
 // 重置查询
 const resetQuery = () => {
-  console.log('重置前:', queryParams.value)  // 添加日志打印
   queryParams.value = {
+    page: 1,
+    pageSize: 10,
     username: '',
     role_id: undefined,
-    status: undefined,
-    page: 1,
-    pageSize: 10
+    status: undefined
   }
-  console.log('重置后:', queryParams.value)  // 添加日志打印
   getUserList()
 }
 

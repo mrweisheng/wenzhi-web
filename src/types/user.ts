@@ -40,3 +40,11 @@ export interface UserInfo {
   created_at: string
   updated_at: string
 }
+
+export interface UserQuery {
+  username?: string
+  role_id?: number
+  status?: number
+  page: number
+  pageSize: number
+}
