@@ -79,7 +79,7 @@ const constantRoutes: RouteRecordRaw[] = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory('/wenzhisystem/'),
   routes: constantRoutes
 })
 

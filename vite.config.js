@@ -2,6 +2,7 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
 export default {
+  base: '/wenzhisystem/',
   plugins: [vue()],
   resolve: {
     alias: {
