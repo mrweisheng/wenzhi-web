@@ -85,12 +85,11 @@
 import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { getStatistics } from '@/api/statistics'
-import type { Statistics } from '@/types/statistics'
 import { User, Edit, ShoppingCart, UserFilled, Menu } from '@element-plus/icons-vue'
 
 const userStore = useUserStore()
 const loading = ref(false)
-const statistics = ref<Statistics>({
+const statistics = ref({
   userCount: 0,
   menuCount: 0,
   roleCount: 0,
@@ -123,7 +122,9 @@ const fetchStatistics = async () => {
   try {
     loading.value = true
     const res = await getStatistics()
-    statistics.value = res.data
+    if (res.data && res.data.data) {
+      statistics.value = res.data.data
+    }
   } catch (error) {
     console.error('获取统计数据失败:', error)
   } finally {

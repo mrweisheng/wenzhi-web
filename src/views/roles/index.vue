@@ -4,7 +4,13 @@
       <el-button type="primary" @click="handleAdd">新增角色</el-button>
     </div>
 
-    <el-table v-loading="loading" :data="roleList" style="width: 100%; margin-top: 20px">
+    <el-table
+      v-loading="loading"
+      :data="roleList"
+      style="width: 100%; margin-top: 20px"
+      :row-key="(row) => row.id"
+      :tree-props="{ children: 'children' }"
+    >
       <el-table-column prop="id" label="ID" width="80" />
       <el-table-column prop="role_name" label="角色名称" />
       <el-table-column prop="description" label="描述" />
@@ -81,37 +87,30 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, onMounted, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import type { FormInstance, FormRules } from 'element-plus'
-import type { Role, RoleForm } from '@/types/role'
 import { getRoles, createRole, updateRole, deleteRole, getRoleMenus } from '@/api/role'
 import { formatDate } from '@/utils/format'
 import { getMenus } from '@/api/menu'
-import type { DateModelType } from 'element-plus'
 import { formatDateRange } from '@/utils/date'
 
 const loading = ref(false)
-const roleList = ref<Role[]>([])
+const roleList = ref([])
 const dialogVisible = ref(false)
 const dialogTitle = ref('')
 const permissionDialogVisible = ref(false)
 const submitting = ref(false)
 
-const formRef = ref<FormInstance>()
+const formRef = ref()
 
-interface EditingRole extends RoleForm {
-  id?: number
-}
-
-const roleForm = ref<EditingRole>({
+const roleForm = ref({
   role_name: '',
   description: '',
   menu_ids: []
 })
 
-const rules: FormRules = {
+const rules = {
   role_name: [
     { required: true, message: '请输入角色名称', trigger: 'blur' },
     { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
@@ -132,9 +131,10 @@ const getRoleList = async () => {
   try {
     loading.value = true
     const res = await getRoles()
-    roleList.value = res.data
+    roleList.value = Array.isArray(res.data.data) ? res.data.data : []
   } catch (error) {
     console.error('Get roles error:', error)
+    roleList.value = []
   } finally {
     loading.value = false
   }
@@ -147,14 +147,14 @@ const handleAdd = () => {
 }
 
 // 编辑角色
-const handleEdit = (row: Role) => {
+const handleEdit = (row) => {
   dialogTitle.value = '编辑角色'
   roleForm.value = { ...row }
   dialogVisible.value = true
 }
 
 // 删除角色
-const handleDelete = async (row: Role) => {
+const handleDelete = async (row) => {
   try {
     await ElMessageBox.confirm('确认删除该角色吗？', '提示', {
       type: 'warning'
@@ -177,18 +177,10 @@ const handleSubmit = async () => {
   try {
     submitting.value = true
     if (roleForm.value.id) {
-      await updateRole(roleForm.value.id, {
-        role_name: roleForm.value.role_name,
-        description: roleForm.value.description,
-        menu_ids: roleForm.value.menu_ids
-      })
+      await updateRole(roleForm.value.id, roleForm.value)
       ElMessage.success('更新成功')
     } else {
-      await createRole({
-        role_name: roleForm.value.role_name,
-        description: roleForm.value.description,
-        menu_ids: roleForm.value.menu_ids
-      })
+      await createRole(roleForm.value)
       ElMessage.success('创建成功')
     }
     dialogVisible.value = false
@@ -215,28 +207,33 @@ const resetForm = () => {
 // 权限相关
 const treeRef = ref()
 const menuTree = ref([])
-const selectedMenus = ref<number[]>([])
-const currentRoleId = ref<number>()
+const selectedMenus = ref([])
+const currentRoleId = ref()
 
 // 获取所有菜单
 const getMenuList = async () => {
   try {
     const res = await getMenus()
-    menuTree.value = res.data
+    console.log('菜单数据:', res.data.data)
+    if (Array.isArray(res.data.data)) {
+      menuTree.value = res.data.data
+    } else {
+      menuTree.value = []
+      console.error('返回的菜单数据格式不正确')
+    }
   } catch (error) {
     console.error('Get menus error:', error)
+    menuTree.value = []
   }
 }
 
 // 打开权限设置对话框
-const handlePermission = async (row: Role) => {
+const handlePermission = async (row) => {
   try {
     currentRoleId.value = row.id
-    // 获取所有菜单
     await getMenuList()
-    // 获取角色已有权限
     const res = await getRoleMenus(row.id)
-    selectedMenus.value = res.data.map((menu: any) => menu.id)
+    selectedMenus.value = res.data.data.map(menu => menu.id)
     permissionDialogVisible.value = true
   } catch (error) {
     console.error('Get role menus error:', error)
@@ -250,6 +247,7 @@ const handlePermissionSubmit = async () => {
   try {
     submitting.value = true
     const checkedKeys = treeRef.value.getCheckedKeys()
+    console.log('选中的权限:', checkedKeys)
     await updateRole(currentRoleId.value, {
       menu_ids: checkedKeys
     })
@@ -263,7 +261,7 @@ const handlePermissionSubmit = async () => {
 }
 
 // 日期范围
-const dateRange = ref<[DateModelType, DateModelType] | undefined>()
+const dateRange = ref()
 
 // 监听日期变化
 watch(dateRange, (val) => {

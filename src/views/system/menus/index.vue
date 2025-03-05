@@ -7,44 +7,14 @@
     <el-table
       v-loading="loading"
       :data="menuList"
+      style="width: 100%"
       row-key="id"
       :tree-props="{ children: 'children' }"
-      style="width: 100%; margin-top: 20px"
     >
       <el-table-column prop="name" label="菜单名称" />
       <el-table-column prop="path" label="路由路径" />
-      <el-table-column prop="icon" label="图标" width="100">
-        <template #default="{ row }">
-          <el-icon>
-            <component :is="row.icon" />
-          </el-icon>
-        </template>
-      </el-table-column>
-      <el-table-column prop="sort" label="排序" width="120">
-        <template #default="{ row }">
-          <div class="sort-column">
-            <span>{{ row.sort }}</span>
-            <div class="sort-buttons">
-              <el-button 
-                type="primary" 
-                link 
-                :disabled="!canMoveUp(row)"
-                @click="handleMoveUp(row)"
-              >
-                <el-icon><ArrowUp /></el-icon>
-              </el-button>
-              <el-button 
-                type="primary" 
-                link 
-                :disabled="!canMoveDown(row)"
-                @click="handleMoveDown(row)"
-              >
-                <el-icon><ArrowDown /></el-icon>
-              </el-button>
-            </div>
-          </div>
-        </template>
-      </el-table-column>
+      <el-table-column prop="icon" label="图标" />
+      <el-table-column prop="sort" label="排序" width="80" />
       <el-table-column label="操作" width="200" fixed="right">
         <template #default="{ row }">
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
@@ -142,13 +112,18 @@ const rules: FormRules = {
 const userStore = useUserStore()
 
 // 获取菜单列表
-const fetchMenus = async () => {
+const getMenuList = async () => {
   try {
     loading.value = true
-    const { data } = await getMenus()
-    menuList.value = data
+    const res = await getMenus()
+    if (res.data && res.data.data) {
+      // 确保数据是数组
+      menuList.value = Array.isArray(res.data.data) ? res.data.data : []
+    }
   } catch (error) {
     console.error('获取菜单列表失败:', error)
+    ElMessage.error('获取菜单列表失败')
+    menuList.value = [] // 出错时设置为空数组
   } finally {
     loading.value = false
   }
@@ -178,7 +153,7 @@ const handleDelete = async (row: Menu) => {
     ElMessage.success('删除成功')
     // 删除成功后刷新菜单
     await userStore.getUserInfoAction()
-    fetchMenus()
+    getMenuList()
   } catch (error) {
     console.error('Delete menu error:', error)
   }
@@ -207,7 +182,7 @@ const handleSubmit = async () => {
       await userStore.getUserInfoAction()
     }
     dialogVisible.value = false
-    fetchMenus()
+    getMenuList()
   } catch (error) {
     console.error('Submit menu error:', error)
   } finally {
@@ -257,7 +232,7 @@ const handleMoveUp = async (row: Menu) => {
     await updateMenu(prevMenu.id, { sort: tempSort })
     
     // 刷新列表和侧边栏
-    await fetchMenus()
+    getMenuList()
     await userStore.getUserInfoAction()
     ElMessage.success('排序更新成功')
   } catch (error) {
@@ -279,7 +254,7 @@ const handleMoveDown = async (row: Menu) => {
     await updateMenu(nextMenu.id, { sort: tempSort })
     
     // 刷新列表和侧边栏
-    await fetchMenus()
+    getMenuList()
     await userStore.getUserInfoAction()
     ElMessage.success('排序更新成功')
   } catch (error) {
@@ -289,7 +264,7 @@ const handleMoveDown = async (row: Menu) => {
 }
 
 onMounted(() => {
-  fetchMenus()
+  getMenuList()
 })
 </script>
 

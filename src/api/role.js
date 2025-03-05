@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import type { RoleForm } from '@/types/role'
 
 // 获取角色列表
 export function getRoles() {
@@ -41,4 +40,6 @@ export function getRoleMenus(roleId) {
     url: `/api/roles/${roleId}/menus`,
     method: 'get'
   })
-} 
+}
+
+// 其他接口... 

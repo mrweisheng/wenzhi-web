@@ -453,10 +453,16 @@ const getList = async () => {
   try {
     loading.value = true
     const res = await getWriters(queryParams.value)
-    writerList.value = res.data.list
-    total.value = res.data.total
+    if (res.data && res.data.data) {
+      writerList.value = res.data.data.list || []
+      total.value = res.data.data.total || 0
+      console.log('写手列表数据:', writerList.value)
+    }
   } catch (error) {
     console.error('获取写手列表失败:', error)
+    ElMessage.error('获取写手列表失败')
+    writerList.value = []
+    total.value = 0
   } finally {
     loading.value = false
   }

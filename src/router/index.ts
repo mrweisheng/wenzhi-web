@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import type { AppRouteRecordRaw } from '@/types/route'
 import type { RouteRecordRaw } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import { ElMessage } from 'element-plus'
@@ -81,7 +80,7 @@ const constantRoutes: RouteRecordRaw[] = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: constantRoutes as RouteRecordRaw[]
+  routes: constantRoutes
 })
 
 // 路由守卫
@@ -128,4 +127,4 @@ router.beforeEach(async (to, from, next) => {
   next()
 })
 
-export default router 
+export default router

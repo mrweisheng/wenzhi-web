@@ -57,7 +57,7 @@
       <el-table-column prop="username" label="用户名" />
       <el-table-column prop="real_name" label="姓名" />
       <el-table-column prop="email" label="邮箱" />
-      <el-table-column prop="role.role_name" label="角色" />
+      <el-table-column prop="role_name" label="角色" />
       <el-table-column label="状态" width="100">
         <template #default="{ row }">
           <el-switch
@@ -235,12 +235,13 @@ const dateRange = ref<[DateModelType, DateModelType] | undefined>()
 const getUserList = async () => {
   try {
     loading.value = true
-    const { data: response } = await getUsers(queryParams.value)
-    const { list, total: totalCount } = response.data
-    userList.value = list
-    total.value = totalCount
+    const res = await getUsers()
+    if (res.data && res.data.data) {
+      userList.value = res.data.data
+    }
   } catch (error) {
     console.error('获取用户列表失败:', error)
+    ElMessage.error('获取用户列表失败')
   } finally {
     loading.value = false
   }
@@ -250,10 +251,11 @@ const getUserList = async () => {
 const getRoleList = async () => {
   try {
     const res = await getRoles()
-    roleList.value = res.data
-    console.log('res', roleList.value)
+    if (res.data && res.data.data) {
+      roleList.value = res.data.data
+    }
   } catch (error) {
-    console.error('Get roles error:', error)
+    console.error('获取角色列表失败:', error)
   }
 }
 

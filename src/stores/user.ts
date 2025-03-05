@@ -2,13 +2,15 @@ import { defineStore } from 'pinia'
 import type { UserInfo } from '@/types/user'
 import type { LoginResponse } from '@/types/auth'
 import { getUserInfo } from '@/api/auth'
+import type { Menu } from '@/types/menu'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
     token: localStorage.getItem('token') || '',
     refreshToken: localStorage.getItem('refreshToken') || '',
     tokenExpires: Number(localStorage.getItem('tokenExpires')) || 0,
-    userInfo: null as UserInfo | null
+    userInfo: null as UserInfo | null,
+    menus: [] as Menu[]
   }),
   
   actions: {
@@ -37,10 +39,16 @@ export const useUserStore = defineStore('user', {
     
     async getUserInfoAction() {
       try {
-        const { data } = await getUserInfo()
-        this.setUserInfo(data.data as UserInfo)
+        const res = await getUserInfo()
+        if (res.data?.data) {
+          this.userInfo = res.data.data
+          // 处理菜单数据，修改 path
+          if (Array.isArray(res.data.data.menus)) {
+            this.menus = res.data.data.menus  // 直接使用原始菜单数据，不做路径处理
+          }
+        }
       } catch (error) {
-        this.clearAuth()
+        console.error('Get user info error:', error)
         throw error
       }
     }

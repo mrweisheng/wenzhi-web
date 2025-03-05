@@ -13,7 +13,7 @@ export function getWriters(params?: WriterQuery) {
 // 获取写手详情
 export function getWriter(id: number) {
   return request({
-    url: `/writers/${id}`,
+    url: `/api/writers/${id}`,
     method: 'get'
   })
 }
@@ -30,7 +30,7 @@ export function createWriter(data: WriterForm) {
 // 更新写手
 export function updateWriter(id: number, data: Partial<WriterForm>) {
   return request({
-    url: `/writers/${id}`,
+    url: `/api/writers/${id}`,
     method: 'put',
     data
   })
@@ -39,7 +39,7 @@ export function updateWriter(id: number, data: Partial<WriterForm>) {
 // 删除写手
 export function deleteWriter(id: number) {
   return request({
-    url: `/writers/${id}`,
+    url: `/api/writers/${id}`,
     method: 'delete'
   })
 }
@@ -47,7 +47,7 @@ export function deleteWriter(id: number) {
 // 批量删除写手
 export function batchDeleteWriters(ids: number[]) {
   return request({
-    url: '/writers',
+    url: '/api/writers',
     method: 'delete',
     data: { ids }
   })
@@ -56,7 +56,7 @@ export function batchDeleteWriters(ids: number[]) {
 // 写手申请
 export function applyWriter(data: WriterForm) {
   return request({
-    url: '/writer/apply',
+    url: '/api/writer/apply',
     method: 'post',
     data
   })
