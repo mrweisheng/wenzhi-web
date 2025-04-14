@@ -48,3 +48,44 @@ export interface UserQuery {
   startTime?: string
   endTime?: string
 }
+
+// 用户状态类型
+export type UserStatus = 'active' | 'inactive' | 'locked';
+
+// API返回的用户信息结构
+export interface ApiUser {
+  id: string;
+  username: string;
+  role_id: string;
+  role_name: string;
+  real_name: string;
+  email: string;
+  status: UserStatus;
+  avatar?: string | null;
+}
+
+// 前端使用的用户信息结构
+export interface User {
+  id: string;
+  username: string;
+  realName: string;
+  email: string;
+  roleId: string;
+  roleName: string;
+  status: UserStatus;
+  avatar: string | null;
+}
+
+// 转换API用户到前端用户
+export function apiUserToUser(apiUser: ApiUser): User {
+  return {
+    id: apiUser.id,
+    username: apiUser.username,
+    realName: apiUser.real_name,
+    email: apiUser.email,
+    roleId: apiUser.role_id,
+    roleName: apiUser.role_name,
+    status: apiUser.status,
+    avatar: apiUser.avatar || null
+  };
+}

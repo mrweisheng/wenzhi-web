@@ -56,11 +56,11 @@
           <el-input v-model="applicationForm.phone_2" placeholder="请输入备用手机号码" />
         </el-form-item>
 
-        <el-form-item label="支付宝姓名" prop="alipay_name">
+        <el-form-item label="支付宝姓名" prop="alipay_name" required>
           <el-input v-model="applicationForm.alipay_name" placeholder="请输入支付宝姓名" />
         </el-form-item>
 
-        <el-form-item label="支付宝账号" prop="alipay_account">
+        <el-form-item label="支付宝账号" prop="alipay_account" required>
           <el-input v-model="applicationForm.alipay_account" placeholder="请输入支付宝账号" />
         </el-form-item>
 
@@ -78,7 +78,7 @@
           </div>
         </el-form-item>
 
-        <el-form-item label="申请日期" prop="apply_date">
+        <el-form-item label="申请日期" prop="apply_date" v-if="!isPublicAccess">
           <el-date-picker
             v-model="applyDate"
             type="date"
@@ -136,20 +136,7 @@ const submittedWriterId = ref('')
 const formVisible = ref(false)
 const selectedSpecialized = ref<string[]>([])
 const applyDate = ref<DateModelType | undefined>()
-
-// 验证 token
-onMounted(() => {
-  const token = route.query.token as string
-  
-  // 简单验证 token 格式
-  if (!token || !token.startsWith('apply_')) {
-    ElMessage.error('无效的申请链接')
-    return
-  }
-  
-  // token 验证通过，显示表单
-  formVisible.value = true
-})
+const isPublicAccess = route.name === 'WriterApplication' // 判断是否是公开访问
 
 // 表单数据
 const applicationForm = ref<WriterForm>({
@@ -192,8 +179,11 @@ const rules: FormRules = {
   specialized_content: [
     { required: true, message: '请选择擅长内容', trigger: 'change' }
   ],
-  apply_date: [
-    { required: true, message: '请选择申请日期', trigger: 'change' }
+  alipay_name: [
+    { required: true, message: '请输入支付宝姓名', trigger: 'blur' }
+  ],
+  alipay_account: [
+    { required: true, message: '请输入支付宝账号', trigger: 'blur' }
   ]
 }
 
@@ -248,21 +238,24 @@ const handleSubmit = async () => {
   
   try {
     await formRef.value.validate()
-    
     submitting.value = true
+    
     const ip = await getClientIp()
-    const submitData: WriterForm = {
-      ...applicationForm.value,
-      specialized_content: selectedSpecialized.value.join(';'),
-      ip_address: ip,
-      apply_date: applicationForm.value.apply_date
+    applicationForm.value.ip_address = ip
+    
+    if (isPublicAccess) {
+      // 公开申请逻辑
+      await submitApplication(applicationForm.value)
+    } else {
+      // 后台新增写手逻辑
+      await createWriter(applicationForm.value)
     }
-    const res = await createWriter(submitData)
-    submittedWriterId.value = res.data.writer_id
+    
+    ElMessage.success(isPublicAccess ? '申请提交成功' : '写手添加成功')
     successDialogVisible.value = true
   } catch (error) {
-    console.error('提交申请失败:', error)
-    ElMessage.error('提交失败，请稍后重试')
+    console.error('操作失败:', error)
+    ElMessage.error('操作失败')
   } finally {
     submitting.value = false
   }
@@ -274,6 +267,20 @@ const handleClose = () => {
   // 可以跳转到一个静态页面或关闭窗口
   window.close()
 }
+
+onMounted(() => {
+  // 直接显示表单
+  formVisible.value = true
+  
+  // 设置申请日期为当前日期
+  const currentDate = formatDate(new Date())
+  applicationForm.value.apply_date = currentDate
+  
+  if (!isPublicAccess) {
+    // 只有在后台新增时才需要设置日期选择器的值
+    applyDate.value = new Date()
+  }
+})
 </script>
 
 <style lang="scss" scoped>

@@ -52,7 +52,10 @@ const constantRoutes: RouteRecordRaw[] = [
       {
         path: 'tasks',
         name: 'Tasks',
-        component: () => import('../views/tasks/index.vue')
+        component: () => import('../views/tasks/index.vue'),
+        meta: {
+          title: '客服订单填报'
+        }
       },
       {
         path: 'finance',
@@ -73,6 +76,31 @@ const constantRoutes: RouteRecordRaw[] = [
         path: 'orders',
         name: 'Orders',
         component: () => import('../views/orders/index.vue')
+      },
+      {
+        path: 'writers/add',
+        name: 'WriterAdd',
+        component: () => import('@/views/writer-application/index.vue'),
+        meta: {
+          title: '新增写手',
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'issues',
+        name: 'Issues',
+        component: () => import('@/views/issues/index.vue'),
+        meta: {
+          title: '问题反馈'
+        }
+      },
+      {
+        path: 'cases',
+        name: 'Cases',
+        component: () => import('@/views/cases/index.vue'),
+        meta: {
+          title: '案例归档'
+        }
       }
     ]
   }

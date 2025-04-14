@@ -21,4 +21,22 @@ export function processOrder(data: FormData) {
     },
     data
   })
+}
+
+// 更新订单客服
+export function updateOrderCustomer(orderId: string, data: { customer_id: number }) {
+  return request<ApiResponse>({
+    url: `/api/orders/${orderId}/customer`,
+    method: 'put',
+    data
+  })
+}
+
+// 更新订单写手
+export function updateOrderWriter(orderId: string, data: { writer_id: number }) {
+  return request({
+    url: `/api/orders/${orderId}/writer`,
+    method: 'put',
+    data
+  })
 } 

@@ -148,15 +148,7 @@
       </template>
     </el-dialog>
 
-    <!-- 日期范围选择器 -->
-    <el-date-picker
-      v-model="dateRange"
-      type="daterange"
-      value-format="YYYY-MM-DD"
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-    />
+   
   </div>
 </template>
 
@@ -184,7 +176,7 @@ const formRef = ref<FormInstance>()
 const userForm = ref<UserForm>({
   username: '',
   password: '',
-  role_id: 0,
+  role_id: undefined,
   real_name: '',
   email: '',
   status: 1
@@ -357,7 +349,7 @@ const resetForm = () => {
   userForm.value = {
     username: '',
     password: '',
-    role_id: 0,
+    role_id: undefined,
     real_name: '',
     email: '',
     status: 1
@@ -384,6 +376,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.app-container {
+  padding: 20px;
+}
 .toolbar {
   padding: 10px 0;
   display: flex;

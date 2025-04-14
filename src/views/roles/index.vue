@@ -1,5 +1,18 @@
 <template>
   <div class="app-container">
+    <!-- 全屏加载 -->
+    <div 
+      v-if="fullscreenLoading" 
+      class="fullscreen-loading"
+    >
+      <el-loading
+        :visible="true"
+        fullscreen
+        text="正在加载权限数据..."
+        background="rgba(0, 0, 0, 0.7)"
+      />
+    </div>
+
     <div class="toolbar">
       <el-button type="primary" @click="handleAdd">新增角色</el-button>
     </div>
@@ -22,7 +35,14 @@
       <el-table-column label="操作" width="250" fixed="right">
         <template #default="{ row }">
           <el-button type="primary" link @click="handleEdit(row)">编辑</el-button>
-          <el-button type="primary" link @click="handlePermission(row)">权限设置</el-button>
+          <el-button 
+            type="primary" 
+            link 
+            @click="handlePermission(row)"
+            :loading="permissionLoading && currentRoleId === row.id"
+          >
+            权限设置
+          </el-button>
           <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
         </template>
       </el-table-column>
@@ -57,33 +77,38 @@
     <el-dialog
       title="权限设置"
       v-model="permissionDialogVisible"
-      width="600px"
+      width="500px"
+      :close-on-click-modal="false"
+      :destroy-on-close="true"
+      class="permission-dialog"
     >
-      <el-tree
-        ref="treeRef"
-        :data="menuTree"
-        show-checkbox
-        node-key="id"
-        :props="{ label: 'name' }"
-        :default-checked-keys="selectedMenus"
-      />
+      <div v-loading="permissionLoading" class="permission-content">
+        <div class="permission-header">
+          <h3>为角色 "{{ currentRoleName }}" 分配权限</h3>
+          <p class="permission-tip">请选择该角色可访问的菜单和功能</p>
+        </div>
+        <el-tree
+          ref="treeRef"
+          :data="menuTree"
+          show-checkbox
+          node-key="id"
+          :props="{ label: 'name' }"
+          :default-checked-keys="selectedMenus"
+          class="permission-tree"
+          style="max-height: 400px; overflow-y: auto"
+        />
+      </div>
       <template #footer>
-        <el-button @click="permissionDialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handlePermissionSubmit" :loading="submitting">
-          确定
-        </el-button>
+        <div class="dialog-footer">
+          <el-button @click="permissionDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handlePermissionSubmit" :loading="submitting">
+            保存权限设置
+          </el-button>
+        </div>
       </template>
     </el-dialog>
 
-    <!-- 日期范围选择器 -->
-    <el-date-picker
-      v-model="dateRange"
-      type="daterange"
-      value-format="YYYY-MM-DD"
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-    />
+    
   </div>
 </template>
 
@@ -209,6 +234,11 @@ const treeRef = ref()
 const menuTree = ref([])
 const selectedMenus = ref([])
 const currentRoleId = ref()
+const currentRoleName = ref('')
+const permissionLoading = ref(false)
+
+// 添加全局加载状态
+const fullscreenLoading = ref(false)
 
 // 获取所有菜单
 const getMenuList = async () => {
@@ -230,13 +260,32 @@ const getMenuList = async () => {
 // 打开权限设置对话框
 const handlePermission = async (row) => {
   try {
+    // 显示全屏加载
+    fullscreenLoading.value = true
     currentRoleId.value = row.id
-    await getMenuList()
-    const res = await getRoleMenus(row.id)
-    selectedMenus.value = res.data.data.map(menu => menu.id)
+    currentRoleName.value = row.role_name
+    
+    const [menuRes, roleMenuRes] = await Promise.all([
+      getMenus(),
+      getRoleMenus(row.id)
+    ])
+    
+    if (Array.isArray(menuRes.data.data)) {
+      menuTree.value = menuRes.data.data
+    } else {
+      menuTree.value = []
+      console.error('返回的菜单数据格式不正确')
+    }
+    
+    selectedMenus.value = roleMenuRes.data.data.map(menu => menu.id)
+    
     permissionDialogVisible.value = true
   } catch (error) {
     console.error('Get role menus error:', error)
+    ElMessage.error('获取权限数据失败')
+  } finally {
+    // 关闭全屏加载
+    fullscreenLoading.value = false
   }
 }
 
@@ -289,7 +338,89 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.app-container {
+  padding: 20px;
+}
 .toolbar {
   padding: 10px 0;
+}
+
+/* 权限对话框样式 */
+:deep(.permission-dialog) {
+  .el-dialog__body {
+    padding: 0;
+  }
+  
+  .el-dialog__header {
+    padding: 20px 24px;
+    margin: 0;
+    border-bottom: 1px solid #e4e7ed;
+    background-color: #f5f7fa;
+  }
+  
+  .el-dialog__footer {
+    padding: 16px 24px;
+    border-top: 1px solid #e4e7ed;
+    background-color: #f5f7fa;
+  }
+}
+
+.permission-content {
+  padding: 20px;
+  
+  .permission-header {
+    margin-bottom: 16px;
+    
+    h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: #303133;
+    }
+    
+    .permission-tip {
+      margin: 0;
+      color: #909399;
+      font-size: 13px;
+    }
+  }
+}
+
+.permission-tree {
+  border: 1px solid #e4e7ed;
+  border-radius: 4px;
+  padding: 12px;
+  background-color: #f9fafc;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* 添加全屏加载样式 */
+.fullscreen-loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+:deep(.el-loading-spinner) {
+  .circular {
+    width: 42px;
+    height: 42px;
+  }
+  .el-loading-text {
+    color: #fff;
+    font-size: 16px;
+    margin: 8px 0;
+  }
 }
 </style>

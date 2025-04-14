@@ -2,7 +2,7 @@ import vue from '@vitejs/plugin-vue'
 import path from 'path'
 
 export default {
-  base: '/wenzhisystem/',
+  base: process.env.VITE_BASE_PATH,
   plugins: [vue()],
   resolve: {
     alias: {
@@ -10,7 +10,7 @@ export default {
     }
   },
   server: {
-    host: '0.0.0.0',
+    host: true,
     port: 5173,
   },
   build: {

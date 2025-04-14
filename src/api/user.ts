@@ -44,4 +44,30 @@ export function updateUserStatus(id: number, data: { status: 0 | 1 }) {
     method: 'put',
     data
   })
+}
+
+// 获取客服列表
+export function getCustomerServiceList() {
+  return request<ApiResponse>({
+    url: '/api/users/customer-service',
+    method: 'get'
+  })
+}
+
+// 更新当前用户邮箱
+export function updateUserEmail(email: string) {
+  return request<ApiResponse>({
+    url: '/api/users/email',
+    method: 'put',
+    data: { email }
+  })
+}
+
+// 更新当前用户密码
+export function updateUserPassword(data: { oldPassword: string; newPassword: string }) {
+  return request<ApiResponse>({
+    url: '/api/users/password',
+    method: 'put',
+    data
+  })
 } 

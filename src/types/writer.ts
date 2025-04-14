@@ -19,6 +19,19 @@ export interface Writer {
   created_by: string
   last_modified_time: string
   last_modified_by: string
+  is_activated?: number
+  latest_rating?: {
+    id: number
+    score: number
+    comment: string
+    date: string
+    created_at: string
+    updated_at: string
+    quality_inspector?: {
+      id: number
+      name: string
+    }
+  }
 }
 
 // 写手表单类型
@@ -49,4 +62,19 @@ export interface WriterQuery {
   writing_experience?: string
   startTime?: string
   endTime?: string
+}
+
+// 写手列表项类型
+export interface WriterListItem {
+  id: number
+  name: string
+  writer_id?: string
+  phone_1?: string
+}
+
+// 写手列表响应类型
+export interface WriterListResponse {
+  code: number
+  message: string
+  data: WriterListItem[]
 } 

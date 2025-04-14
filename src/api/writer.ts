@@ -1,5 +1,6 @@
 import request from '@/utils/request'
 import type { WriterForm, WriterQuery } from '@/types/writer'
+import type { ApiResponse } from '@/types/response'
 
 // 获取写手列表
 export function getWriters(params?: WriterQuery) {
@@ -67,4 +68,57 @@ export function generateApplicationToken() {
   // 简单生成一个临时令牌
   const token = `apply_${Date.now()}`
   return Promise.resolve({ data: { token } })
+}
+
+// 获取写手列表（用于下拉选择）
+export function getWriterList() {
+  return request({
+    url: '/api/writers/list',
+    method: 'get'
+  })
+}
+
+// 添加/更新写手评分
+export function rateWriter(writerId: number, data: { score: number; comment: string }) {
+  return request({
+    url: `/api/writers/${writerId}/ratings`,
+    method: 'post',
+    data
+  })
+}
+
+// 获取某日所有写手评分
+export function getDailyWriterRatings(params?: { date?: string; page?: number; pageSize?: number }) {
+  return request({
+    url: '/api/writer-ratings/daily',
+    method: 'get',
+    params
+  })
+}
+
+// 获取指定写手当日评分
+export function getWriterTodayRating(writerId: number) {
+  return request({
+    url: `/api/writers/${writerId}/today-rating`,
+    method: 'get'
+  })
+}
+
+/**
+ * 获取写手评分历史
+ * @param writerId 写手ID
+ * @param params 查询参数
+ * @returns 评分历史数据
+ */
+export function getWriterRatingHistory(writerId: number | string, params?: {
+  page?: number;
+  pageSize?: number;
+  start_date?: string;
+  end_date?: string;
+}) {
+  return request({
+    url: `/api/writers/${writerId}/ratings`,
+    method: 'get',
+    params
+  })
 } 

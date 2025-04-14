@@ -56,7 +56,7 @@
           />
         </el-form-item>
         <el-form-item label="图标" prop="icon">
-          <el-input v-model="menuForm.icon" placeholder="请输入图标名称" />
+          <icon-select v-model="menuForm.icon" />
         </el-form-item>
         <el-form-item label="排序" prop="sort">
           <el-input-number v-model="menuForm.sort" :min="0" :max="99" />
@@ -80,6 +80,7 @@ import { getMenus, createMenu, updateMenu, deleteMenu } from '@/api/menu'
 import type { Menu, MenuForm } from '@/types/menu'
 import { useUserStore } from '@/stores/user'
 import { ArrowUp, ArrowDown } from '@element-plus/icons-vue'
+import IconSelect from '@/components/IconSelect/index.vue'
 
 const loading = ref(false)
 const menuList = ref<Menu[]>([])
@@ -269,6 +270,9 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.app-container {
+  padding: 20px;
+}
 .toolbar {
   padding: 10px 0;
 }
@@ -288,4 +292,4 @@ onMounted(() => {
 .sort-buttons .el-button.is-disabled {
   opacity: 0.5;
 }
-</style> 
+</style>

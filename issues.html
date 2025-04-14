@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问题跟踪系统</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .issue-card {
+            transition: transform 0.2s ease-in-out;
+        }
+        .issue-card:hover {
+            transform: translateY(-4px);
+        }
+        .drawer {
+            transition: transform 0.3s ease-in-out;
+        }
+        .drawer.open {
+            transform: translateX(0);
+        }
+        .drawer.closed {
+            transform: translateX(100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 头部搜索区域 -->
+        <div class="mb-8 bg-white rounded-lg shadow p-6">
+            <div class="flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex-1 flex flex-wrap gap-4">
+                    <input type="text" placeholder="搜索问题..." class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 flex-1 max-w-xs">
+                    <select class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="">所有状态</option>
+                        <option value="pending">待处理</option>
+                        <option value="processing">处理中</option>
+                        <option value="completed">已完成</option>
+                    </select>
+                </div>
+                <button class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                    新建问题
+                </button>
+            </div>
+        </div>
+
+        <!-- 问题列表 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- 问题卡片 -->
+            <div class="issue-card bg-white rounded-lg shadow overflow-hidden cursor-pointer" onclick="openDrawer()">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">高优先级</span>
+                        <span class="text-gray-500">#ISSUE-001</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">系统登录异常</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">处理中</span>
+                        <div class="flex items-center space-x-2 text-sm text-gray-500">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>2024-03-15</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-gray-600">张三</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 更多问题卡片 -->
+            <div class="issue-card bg-white rounded-lg shadow overflow-hidden cursor-pointer">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">中优先级</span>
+                        <span class="text-gray-500">#ISSUE-002</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">数据导出功能优化</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">已完成</span>
+                        <div class="flex items-center space-x-2 text-sm text-gray-500">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>2024-03-14</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-gray-600">李四</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issue-card bg-white rounded-lg shadow overflow-hidden cursor-pointer">
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">低优先级</span>
+                        <span class="text-gray-500">#ISSUE-003</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">UI界面样式调整</h3>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">待处理</span>
+                        <div class="flex items-center space-x-2 text-sm text-gray-500">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span>2024-03-13</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah" alt="用户头像" class="w-8 h-8 rounded-full">
+                        <span class="ml-2 text-gray-600">王五</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 问题详情抽屉 -->
+        <div id="drawer" class="drawer fixed top-0 right-0 w-full md:w-2/3 lg:w-1/2 h-full bg-white shadow-2xl transform translate-x-full overflow-y-auto">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-2xl font-bold">系统登录异常</h2>
+                    <button onclick="closeDrawer()" class="p-2 hover:bg-gray-100 rounded-full">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- 基本信息 -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold mb-4">基本信息</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <span class="text-gray-500">问题编号：</span>
+                                <span class="font-medium">#ISSUE-001</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">创建时间：</span>
+                                <span class="font-medium">2024-03-15</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">状态：</span>
+                                <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">处理中</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">优先级：</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">高优先级</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 问题描述 -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold mb-4">问题描述</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            用户反馈在进行系统登录时偶尔会出现验证码校验失败的情况，需要多次重试才能成功登录。初步排查可能是验证码生成或校验逻辑存在问题，建议优先处理。
+                        </p>
+                    </div>
+
+                    <!-- 处理记录 -->
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold mb-4">处理记录</h3>
+                        <div class="space-y-4">
+                            <div class="flex items-start space-x-3">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="用户头像" class="w-8 h-8 rounded-full">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-medium">张三</span>
+                                        <span class="text-gray-500 text-sm">2024-03-15 10:30</span>
+                                    </div>
+                                    <p class="text-gray-700 mt-1">已开始排查验证码服务日志，发现部分请求响应时间异常。</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3">
+                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=John" alt="用户头像" class="w-8 h-8 rounded-full">
+                                <div class="flex-1">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="font-medium">李四</span>
+                                        <span class="text-gray-500 text-sm">2024-03-15 14:20</span>
+                                    </div>
+                                    <p class="text-gray-700 mt-1">检查到验证码服务的缓存配置可能存在问题，建议调整缓存策略。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="mt-6 flex space-x-4">
+                    <button class="flex-1 px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        编辑问题
+                    </button>
+                    <button class="flex-1 px-6 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        关闭问题
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openDrawer() {
+            const drawer = document.getElementById('drawer');
+            drawer.classList.remove('translate-x-full');
+            drawer.classList.add('translate-x-0');
+        }
+
+        function closeDrawer() {
+            const drawer = document.getElementById('drawer');
+            drawer.classList.remove('translate-x-0');
+            drawer.classList.add('translate-x-full');
+        }
+    </script>
+</body>
+</html>

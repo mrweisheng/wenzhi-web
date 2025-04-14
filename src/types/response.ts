@@ -1,3 +1,4 @@
+// API响应通用接口
 export interface ApiResponse<T = any> {
   code: number
   message: string

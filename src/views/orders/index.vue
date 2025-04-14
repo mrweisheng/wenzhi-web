@@ -67,6 +67,16 @@
     >
       <el-table-column prop="order_id" label="订单编号" width="180" />
       <el-table-column prop="payment_id" label="支付单号" width="180" />
+      <el-table-column prop="customer" label="客服" width="120">
+        <template #default="{ row }">
+          <span>{{ customerList.find(c => c.id === row.customer_id)?.username || '暂无' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column prop="writer" label="写手" width="120">
+        <template #default="{ row }">
+          <span>{{ writerList.find(w => w.id === row.writer_id)?.name || '暂无' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="amount" label="买家实付金额" width="120">
         <template #default="{ row }">
           ¥{{ parseFloat(row.amount).toFixed(2) }}
@@ -237,7 +247,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
-import { getOrders, processOrder } from '@/api/order'
+import { getOrders, processOrder, updateOrderCustomer, updateOrderWriter } from '@/api/order'
+import { getCustomerServiceList } from '@/api/user'
+import { getWriterList as fetchWriterList } from '@/api/writer'
 import type { Order, OrderQuery } from '@/types/order'
 import type { ApiResponse, ApiPageResponse } from '@/types/response'
 import { formatDate } from '@/utils/format'
@@ -264,6 +276,14 @@ const queryParams = ref<OrderQuery>({
 
 // 日期范围
 const dateRange = ref<[DateModelType, DateModelType] | undefined>()
+
+// 客服列表
+const customerList = ref([])
+const loadingCustomer = ref(false)
+
+// 写手列表相关的状态
+const writerList = ref([])
+const loadingWriter = ref(false)
 
 // 获取列表数据
 const getList = async () => {
@@ -460,12 +480,69 @@ const handleSubmitUpdate = async () => {
 // 定义渠道列表
 const channels = ['支付宝', '企业微信', '慧辞', '匠易艺']
 
+// 获取客服列表
+const getCustomerList = async () => {
+  try {
+    loadingCustomer.value = true
+    const { data } = await getCustomerServiceList()
+    customerList.value = data.data || []
+  } catch (error) {
+    console.error('获取客服列表失败:', error)
+    ElMessage.error('获取客服列表失败')
+  } finally {
+    loadingCustomer.value = false
+  }
+}
+
+// 更新订单客服
+const handleCustomerChange = async (row, customerId) => {
+  try {
+    await updateOrderCustomer(row.order_id, { customer_id: customerId })
+    ElMessage.success('更新客服成功')
+    getList()
+  } catch (error) {
+    console.error('更新客服失败:', error)
+    ElMessage.error('更新客服失败')
+  }
+}
+
+// 获取写手列表的方法
+const getWriterList = async () => {
+  try {
+    loadingWriter.value = true
+    const { data } = await fetchWriterList()
+    writerList.value = data.data || []
+  } catch (error) {
+    console.error('获取写手列表失败:', error)
+    ElMessage.error('获取写手列表失败')
+  } finally {
+    loadingWriter.value = false
+  }
+}
+
+// 更新写手的方法
+const handleWriterChange = async (row, writerId) => {
+  try {
+    await updateOrderWriter(row.order_id, { writer_id: writerId })
+    ElMessage.success('更新写手成功')
+    getList()
+  } catch (error) {
+    console.error('更新写手失败:', error)
+    ElMessage.error('更新写手失败')
+  }
+}
+
 onMounted(() => {
   getList()
+  getCustomerList()
+  getWriterList()
 })
 </script>
 
 <style lang="scss" scoped>
+.app-container {
+  padding: 20px;
+}
 .toolbar {
   display: flex;
   justify-content: space-between;
@@ -611,6 +688,19 @@ onMounted(() => {
       }
     }
   }
+}
+
+:deep(.el-select) {
+  .el-select__tags {
+    max-width: calc(100% - 30px);
+  }
+}
+
+:deep(.el-select-dropdown__item) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 20px;
 }
 </style>
 
