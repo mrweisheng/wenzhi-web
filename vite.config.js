@@ -15,6 +15,7 @@ export default {
   },
   build: {
     sourcemap: false,
+    // 方案1: 使用terser (需要安装terser依赖)
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -22,6 +23,8 @@ export default {
         drop_debugger: true
       }
     },
+    // 方案2: 使用esbuild (不需要额外依赖，注释上面的terser相关配置并取消注释下面这行)
+    // minify: 'esbuild',
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
@@ -30,6 +33,10 @@ export default {
           'element-plus': ['element-plus', '@element-plus/icons-vue'],
         }
       }
-    }
+    },
+    // 启用构建缓存
+    cache: true,
+    // 并行处理
+    cssCodeSplit: true
   }
 }

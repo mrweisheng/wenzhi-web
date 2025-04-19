@@ -21,6 +21,7 @@
     "@vitejs/plugin-vue": "^4.5.2",
     "cross-env": "^7.0.3",
     "sass": "^1.69.5",
+    "terser": "^5.19.2",
     "vite": "^5.0.8"
   }
 }
