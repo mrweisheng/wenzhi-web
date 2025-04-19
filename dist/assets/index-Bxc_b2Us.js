@@ -1,0 +1,1 @@
+import{_ as r}from"./_plugin-vue_export-helper-BCo6x5W8.js";import{z as e,A as n,y as o}from"./vendor-BVd4RN3d.js";const s={class:"app-container"};const t=r({},[["render",function(r,t){return o(),e("div",s,t[0]||(t[0]=[n("h2",null,"财务管理",-1)]))}]]);export{t as default};

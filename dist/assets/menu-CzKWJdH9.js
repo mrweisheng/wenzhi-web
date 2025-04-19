@@ -1,0 +1,1 @@
+import{s as t}from"./index-CFSbY6bd.js";function e(){return t({url:"/api/menus",method:"get"})}function u(e){return t({url:"/api/menus",method:"post",data:e})}function n(e,u){return t({url:`/api/menus/${e}`,method:"put",data:u})}function r(e){return t({url:`/api/menus/${e}`,method:"delete"})}export{u as c,r as d,e as g,n as u};
