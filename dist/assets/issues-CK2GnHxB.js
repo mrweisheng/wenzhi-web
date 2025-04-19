@@ -1,0 +1,2 @@
+import{G as e}from"./index-4kIbEQav.js";function u(s){return e({url:"/api/issues",method:"get",params:s})}function i(s){return e({url:`/api/issues/${s}`,method:"get"})}function o(s){return e({url:"/api/issues",method:"post",data:s})}function a(s,t){return e({url:`/api/issues/${s}/records`,method:"post",data:t})}function n(s){return e({url:"/api/users",method:"get",params:s})}export{n as a,a as b,o as c,i as d,u as g};
+//# sourceMappingURL=issues-CK2GnHxB.js.map

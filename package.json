@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "cross-env NODE_OPTIONS=--max_old_space_size=4096 vite build --mode production",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
+    "cross-env": "^7.0.3",
     "sass": "^1.69.5",
     "vite": "^5.0.8"
   }

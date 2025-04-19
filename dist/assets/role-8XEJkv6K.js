@@ -1,0 +1,2 @@
+import{G as t}from"./index-4kIbEQav.js";function u(){return t({url:"/api/roles",method:"get"})}function l(e){return t({url:"/api/roles",method:"post",data:e})}function n(e,r){return t({url:`/api/roles/${e}`,method:"put",data:r})}function s(e){return t({url:`/api/roles/${e}`,method:"delete"})}function a(e){return t({url:`/api/roles/${e}/menus`,method:"get"})}export{a,l as c,s as d,u as g,n as u};
+//# sourceMappingURL=role-8XEJkv6K.js.map
